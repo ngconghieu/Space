@@ -418,7 +418,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _defaultBackground: {fileID: 1517206178}
-  _bound: {x: 25, y: 14}
   _position: {x: 96, y: 54}
 --- !u!1 &767134305
 GameObject:
@@ -610,7 +609,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 63770135
-  m_SortingLayer: -1
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -5858099061022299432, guid: 211dd743d3564544a8bd280e2f3e7bcc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

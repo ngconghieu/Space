@@ -7,16 +7,16 @@ public class BackgroundManager : GameMonoBehaviour
 {
     [SerializeField] private SpriteRenderer _defaultBackground;
     [SerializeField] private Dictionary<SpriteRenderer, Vector2> _backgrounds = new();
-    [SerializeField] private Vector2 _bound = new(25, 14);
     [SerializeField] private Vector2 _position = new(96, 54);
-    protected Vector2 _camPos;
+    private Vector2 _camPos;
+    private Vector2 _currentBG;
+
 
     #region LoadComponents
     protected override void LoadComponents()
     {
         base.LoadComponents();
         LoadDefaultBackgrounds();
-        _camPos = CameraManager.Instance.Camera.transform.position;
     }
 
     private void LoadDefaultBackgrounds()
@@ -30,58 +30,70 @@ public class BackgroundManager : GameMonoBehaviour
 
     private void FixedUpdate()
     {
-        CheckAndSpawnBackgrounds();
+        _camPos = CameraManager.Instance.Camera.transform.position;
+        HandleSpawnBackground();
     }
 
-    private void CheckAndSpawnBackgrounds()
+    private void HandleSpawnBackground()
     {
-        Vector2 currentBgPos = GetCurrentBackgroundPosition(_camPos);
+        _currentBG = GetCurrentBackground(_currentBG);
 
-        // calculate half width and height of the screen
-        float halfWidth = _position.x / 2;
-        float halfHeight = _position.y / 2;
-
-        // check direction and spawn background if needed
-        CheckDirection(currentBgPos, _camPos, new Vector2(_position.x, 0), halfWidth - _bound.x, true); // r
-        CheckDirection(currentBgPos, _camPos, new Vector2(-_position.x, 0), halfWidth - _bound.x, true); // l
-        CheckDirection(currentBgPos, _camPos, new Vector2(0, _position.y), halfHeight - _bound.y, false); // u
-        CheckDirection(currentBgPos, _camPos, new Vector2(0, -_position.y), halfHeight - _bound.y, false); // d
-    }
-
-    // determine the current background position
-    private Vector2 GetCurrentBackgroundPosition(Vector2 cameraPosition)
-    {
-        int xGrid = Mathf.FloorToInt((cameraPosition.x + _position.x / 2) / _position.x);
-        int yGrid = Mathf.FloorToInt((cameraPosition.y + _position.y / 2) / _position.y);
-        return new Vector2(xGrid * _position.x, yGrid * _position.y);
-    }
-
-    // check direction and spawn background
-    private void CheckDirection(Vector2 currentBgPos, Vector2 cameraPos, Vector2 direction, float offset, bool isHorizontal)
-    {
-        float cameraDistance = isHorizontal ? Mathf.Abs(cameraPos.x - currentBgPos.x) : Mathf.Abs(cameraPos.y - currentBgPos.y);
-        if (cameraDistance > offset)
+        bool isOne = _camPos.x < _currentBG.x && _camPos.y < _currentBG.y;
+        bool isTwo = _camPos.x < _currentBG.x && _camPos.y > _currentBG.y;
+        bool isThree = _camPos.x > _currentBG.x && _camPos.y > _currentBG.y;
+        bool isFour = _camPos.x > _currentBG.x && _camPos.y < _currentBG.y;
+        if (isOne)
         {
-            Vector2 newBgPos = currentBgPos + direction;
-            //if (!_backgrounds.ContainsKey(newBgPos))
-            //{
-            //    SpawnBackground(newBgPos);
-            //}
+            SpawnBackground(new Vector2(_currentBG.x - _position.x, _currentBG.y));
+            SpawnBackground(new Vector2(_currentBG.x, _currentBG.y - _position.y));
+            SpawnBackground(new Vector2(_currentBG.x - _position.x, _currentBG.y - _position.y));
+        }
+
+        if (isTwo)
+        {
+            SpawnBackground(new Vector2(_currentBG.x - _position.x, _currentBG.y));
+            SpawnBackground(new Vector2(_currentBG.x, _currentBG.y + _position.y));
+            SpawnBackground(new Vector2(_currentBG.x - _position.x, _currentBG.y + _position.y));
+        }
+
+        if (isThree)
+        {
+            SpawnBackground(new Vector2(_currentBG.x + _position.x, _currentBG.y));
+            SpawnBackground(new Vector2(_currentBG.x, _currentBG.y + _position.y));
+            SpawnBackground(new Vector2(_currentBG.x + _position.x, _currentBG.y + _position.y));
+        }
+
+        if (isFour)
+        {
+            SpawnBackground(new Vector2(_currentBG.x + _position.x, _currentBG.y));
+            SpawnBackground(new Vector2(_currentBG.x, _currentBG.y - _position.y));
+            SpawnBackground(new Vector2(_currentBG.x + _position.x, _currentBG.y - _position.y));
         }
     }
 
-    // Spawn Background and flip
-    private void SpawnBackground(Vector2 position)
+    private void SpawnBackground(Vector2 currentPos)
     {
-        //GameObject newBg = Instantiate(_defaultBackground, position, Quaternion.identity);
-        //_backgrounds.Add(position, newBg);
+        if(_backgrounds.ContainsValue(currentPos)) return;
+        SpriteRenderer background = Instantiate(_defaultBackground, currentPos, Quaternion.identity);
+        
+        background.flipX = Mathf.Abs(currentPos.x) / _position.x % 2 == 1; ;
+        background.flipY = Mathf.Abs(currentPos.y) / _position.y % 2 == 1; ;
+        background.transform.SetParent(transform);
+        _backgrounds.Add(background, currentPos);
+    }
 
-        //// Flip Background
-        //int xCount = (int)(position.x / _position.x);
-        //if (xCount % 2 != 0)
-        //{
-        //    SpriteRenderer sr = newBg.GetComponent<SpriteRenderer>();
-        //    sr.flipX = true;
-        //}
+    private Vector2 GetCurrentBackground(Vector2 currentBg)
+    {
+        //int x = Mathf.FloorToInt((_camPos + currentBg));
+        int y = Mathf.FloorToInt(Mathf.Abs(_camPos.y) / _position.y);
+        return new Vector2(x * _position.x, y * _position.y);
     }
 }
+/*
+    -96, 0 | -127, 15 (isTwo)
+    x = -1
+    y = 
+    halfX = 96/2 = 48
+    halfY = 54/2 = 27
+    -96 - 127 = -223 / 96 = -2.3
+*/
