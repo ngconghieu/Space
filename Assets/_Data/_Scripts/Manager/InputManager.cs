@@ -11,8 +11,8 @@ public class InputManager : Singleton<InputManager>
     [SerializeField] private bool _rightClick;
     [SerializeField] private Vector2 _look = Vector2.zero;
 
-    public bool LeftClick => _leftClick;
-    public bool RightClick => _rightClick;
+    public bool isLeftClick => _leftClick;
+    public bool isRightClick => _rightClick;
     public Vector2 Look => _look;
 
     #region LoadComponents

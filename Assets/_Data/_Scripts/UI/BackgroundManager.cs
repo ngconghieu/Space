@@ -7,7 +7,7 @@ public class BackgroundManager : GameMonoBehaviour
 {
     [SerializeField] private SpriteRenderer _defaultBackground;
     [SerializeField] private Dictionary<SpriteRenderer, Vector2> _backgrounds = new();
-    [SerializeField] private Vector2 _position = new(96, 54);
+    [SerializeField] private Vector2 _spritePosition = new(96, 54);
     private Vector2 _camPos;
     private Vector2 _currentBG;
 
@@ -38,62 +38,52 @@ public class BackgroundManager : GameMonoBehaviour
     {
         _currentBG = GetCurrentBackground(_currentBG);
 
-        bool isOne = _camPos.x < _currentBG.x && _camPos.y < _currentBG.y;
-        bool isTwo = _camPos.x < _currentBG.x && _camPos.y > _currentBG.y;
-        bool isThree = _camPos.x > _currentBG.x && _camPos.y > _currentBG.y;
-        bool isFour = _camPos.x > _currentBG.x && _camPos.y < _currentBG.y;
-        if (isOne)
+        bool isThirdQuadrant = _camPos.x < _currentBG.x && _camPos.y < _currentBG.y;
+        bool isSecondQuadrant = _camPos.x < _currentBG.x && _camPos.y > _currentBG.y;
+        bool isFirstQuadrant = _camPos.x > _currentBG.x && _camPos.y > _currentBG.y;
+        bool isFourthQuadrant = _camPos.x > _currentBG.x && _camPos.y < _currentBG.y;
+        if (isThirdQuadrant)
         {
-            SpawnBackground(new Vector2(_currentBG.x - _position.x, _currentBG.y));
-            SpawnBackground(new Vector2(_currentBG.x, _currentBG.y - _position.y));
-            SpawnBackground(new Vector2(_currentBG.x - _position.x, _currentBG.y - _position.y));
+            SpawnBackground(new Vector2(_currentBG.x - _spritePosition.x, _currentBG.y));
+            SpawnBackground(new Vector2(_currentBG.x, _currentBG.y - _spritePosition.y));
+            SpawnBackground(new Vector2(_currentBG.x - _spritePosition.x, _currentBG.y - _spritePosition.y));
         }
 
-        if (isTwo)
+        if (isSecondQuadrant)
         {
-            SpawnBackground(new Vector2(_currentBG.x - _position.x, _currentBG.y));
-            SpawnBackground(new Vector2(_currentBG.x, _currentBG.y + _position.y));
-            SpawnBackground(new Vector2(_currentBG.x - _position.x, _currentBG.y + _position.y));
+            SpawnBackground(new Vector2(_currentBG.x - _spritePosition.x, _currentBG.y));
+            SpawnBackground(new Vector2(_currentBG.x, _currentBG.y + _spritePosition.y));
+            SpawnBackground(new Vector2(_currentBG.x - _spritePosition.x, _currentBG.y + _spritePosition.y));
         }
 
-        if (isThree)
+        if (isFirstQuadrant)
         {
-            SpawnBackground(new Vector2(_currentBG.x + _position.x, _currentBG.y));
-            SpawnBackground(new Vector2(_currentBG.x, _currentBG.y + _position.y));
-            SpawnBackground(new Vector2(_currentBG.x + _position.x, _currentBG.y + _position.y));
+            SpawnBackground(new Vector2(_currentBG.x + _spritePosition.x, _currentBG.y));
+            SpawnBackground(new Vector2(_currentBG.x, _currentBG.y + _spritePosition.y));
+            SpawnBackground(new Vector2(_currentBG.x + _spritePosition.x, _currentBG.y + _spritePosition.y));
         }
 
-        if (isFour)
+        if (isFourthQuadrant)
         {
-            SpawnBackground(new Vector2(_currentBG.x + _position.x, _currentBG.y));
-            SpawnBackground(new Vector2(_currentBG.x, _currentBG.y - _position.y));
-            SpawnBackground(new Vector2(_currentBG.x + _position.x, _currentBG.y - _position.y));
+            SpawnBackground(new Vector2(_currentBG.x + _spritePosition.x, _currentBG.y));
+            SpawnBackground(new Vector2(_currentBG.x, _currentBG.y - _spritePosition.y));
+            SpawnBackground(new Vector2(_currentBG.x + _spritePosition.x, _currentBG.y - _spritePosition.y));
         }
     }
 
     private void SpawnBackground(Vector2 currentPos)
     {
-        if(_backgrounds.ContainsValue(currentPos)) return;
-        SpriteRenderer background = Instantiate(_defaultBackground, currentPos, Quaternion.identity);
-        
-        background.flipX = Mathf.Abs(currentPos.x) / _position.x % 2 == 1; ;
-        background.flipY = Mathf.Abs(currentPos.y) / _position.y % 2 == 1; ;
-        background.transform.SetParent(transform);
+        if (_backgrounds.ContainsValue(currentPos)) return;
+        SpriteRenderer background = Instantiate(_defaultBackground, currentPos, Quaternion.identity, transform);
+        background.flipX = Mathf.Abs(currentPos.x) / _spritePosition.x % 2 == 1;
+        background.flipY = Mathf.Abs(currentPos.y) / _spritePosition.y % 2 == 1;
         _backgrounds.Add(background, currentPos);
     }
 
     private Vector2 GetCurrentBackground(Vector2 currentBg)
     {
-        //int x = Mathf.FloorToInt((_camPos + currentBg));
-        int y = Mathf.FloorToInt(Mathf.Abs(_camPos.y) / _position.y);
-        return new Vector2(x * _position.x, y * _position.y);
+        int x = (int)(Mathf.RoundToInt(_camPos.x / _spritePosition.x));
+        int y = (int)(Mathf.RoundToInt(_camPos.y / _spritePosition.y));
+        return new Vector2(x * _spritePosition.x, y * _spritePosition.y);
     }
 }
-/*
-    -96, 0 | -127, 15 (isTwo)
-    x = -1
-    y = 
-    halfX = 96/2 = 48
-    halfY = 54/2 = 27
-    -96 - 127 = -223 / 96 = -2.3
-*/

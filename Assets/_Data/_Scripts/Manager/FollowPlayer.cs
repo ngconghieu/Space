@@ -3,7 +3,7 @@ using UnityEngine;
 public class FollowPlayer : MonoBehaviour
 {
     [SerializeField] private Transform _player;
-    [SerializeField] private float _speed = 2f;
+    [SerializeField] private float _speed = 3f;
 
     private void FixedUpdate()
     {

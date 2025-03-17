@@ -4,33 +4,38 @@ using UnityEngine;
 
 public abstract class Spawner<T> : Singleton<Spawner<T>> where T : GameMonoBehaviour
 {
-    [SerializeField] private GameObject _prefabHolder;
-    [SerializeField] private List<T> _prefabs;
-    [SerializeField] private List<T> _pools;
+    [SerializeField] private Transform _holder;
+    [SerializeField] protected List<T> _prefabs = new();
+    [SerializeField] private List<T> _pools = new();
 
     #region LoadComponents
     protected override void LoadComponents()
     {
         base.LoadComponents();
         LoadHolder();
+        LoadPrefabs();
     }
 
     private void LoadHolder()
     {
-        if (_prefabHolder != null) return;
-        _prefabHolder = transform.Find("Holder").gameObject;
-        if (_prefabHolder == null)
+        if (_holder != null) return;
+        _holder = transform.Find("Holder");
+        if (_holder == null)
         {
-            _prefabHolder = new GameObject("Holder");
-            _prefabHolder.transform.SetParent(transform);
+            _holder = new GameObject("Holder").transform;
+            _holder.transform.SetParent(transform);
         }
         Debug.Log("LoadHolder", gameObject);
     }
 
     private void LoadPrefabs()
     {
-        if (_prefabs.Count > 0) return;
-        _prefabs.AddRange(_prefabHolder.GetComponentsInChildren<T>());
+        if (_prefabs.Count != 0) return;
+        foreach (var prefab in transform.GetComponentsInChildren<T>())
+        {
+            _prefabs.Add(prefab);
+            prefab.gameObject.SetActive(false);
+        }
         Debug.Log("LoadPrefabs", gameObject);
     }
 
@@ -39,16 +44,17 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : GameMonoBehav
     public virtual T Spawn(T prefab, Vector2 position, Quaternion rotation)
     {
         T newPrefab = GetPrefabFromPool(prefab);
-        newPrefab.transform.position = position;
-        newPrefab.transform.rotation = rotation;
+        newPrefab.transform.SetPositionAndRotation(position, rotation);
+        newPrefab.gameObject.SetActive(true);
+        newPrefab.name = prefab.name;
         return newPrefab;
     }
 
     private T GetPrefabFromPool(T prefab)
     {
-        for(int i = 0; i< _prefabs.Count; i++)
+        for (int i = 0; i < _prefabs.Count; i++)
         {
-            if (!_prefabs[i].name.Equals(prefab.name))
+            if (_prefabs[i].name.Equals(prefab.name))
                 return _prefabs[i];
         }
         //create new prefab
@@ -57,7 +63,7 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : GameMonoBehav
 
     public virtual T Spawn(T prefab)
     {
-        T newPrefab = Instantiate(prefab, _prefabHolder.transform);
+        T newPrefab = Instantiate(prefab, _holder.transform);
         newPrefab.gameObject.SetActive(true);
         return newPrefab;
     }
@@ -67,4 +73,6 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : GameMonoBehav
         _pools.Add(prefab);
         prefab.gameObject.SetActive(false);
     }
+
+    public abstract T GetPrefab(int prefab);
 }

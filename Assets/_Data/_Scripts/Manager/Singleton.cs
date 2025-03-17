@@ -20,6 +20,6 @@ public class Singleton<T> : GameMonoBehaviour where T : MonoBehaviour
             return;
         }
         _instance = this as T;
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 }
