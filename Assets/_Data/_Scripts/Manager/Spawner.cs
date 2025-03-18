@@ -52,7 +52,7 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : GameMonoBehav
 
     private T GetPrefabFromPool(T prefab)
     {
-        for (int i = 0; i < _prefabs.Count; i++)
+        for (int i = 0; i < _pools.Count; i++)
         {
             if (_prefabs[i].name.Equals(prefab.name))
                 return _prefabs[i];

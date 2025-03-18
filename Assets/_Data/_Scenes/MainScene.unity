@@ -161,7 +161,7 @@ GameObject:
   m_Component:
   - component: {fileID: 159773851}
   - component: {fileID: 159773853}
-  - component: {fileID: 159773852}
+  - component: {fileID: 159773854}
   m_Layer: 0
   m_Name: DmgSender
   m_TagString: Untagged
@@ -184,20 +184,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 417352154}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &159773852
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 159773850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0126281da3bc7184db0e118af1c707e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _collider: {fileID: 159773853}
-  _damage: 1
 --- !u!70 &159773853
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -232,9 +218,23 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.05}
-  m_Size: {x: 0.12, y: 0.3}
+  m_Offset: {x: 0, y: -0.05}
+  m_Size: {x: 0.12, y: 0.25}
   m_Direction: 0
+--- !u!114 &159773854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159773850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd704a1e74b344c4d80d77331a569727, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _collider: {fileID: 159773853}
+  damage: 1
 --- !u!1 &417352153
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,7 +251,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &417352154
 Transform:
   m_ObjectHideFlags: 0
@@ -594,7 +594,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e1bd663eb327ee40acbe54d2c7e4ffa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 5
+  _speed: 10
 --- !u!1 &766928514
 GameObject:
   m_ObjectHideFlags: 0
@@ -1469,7 +1469,7 @@ SpriteRenderer:
   m_Sprite: {fileID: 21300018, guid: 8aeb9e233fbb8f14db39770841b78b94, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
-  m_FlipY: 0
+  m_FlipY: 1
   m_DrawMode: 0
   m_Size: {x: 0.07, y: 0.16}
   m_AdaptiveModeThreshold: 0.5

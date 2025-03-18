@@ -12,6 +12,6 @@ public class BulletMovement : GameMonoBehaviour
 
     private void HandleMovement()
     {
-        transform.parent.Translate(_speed * Time.fixedDeltaTime * transform.parent.position);
+        transform.parent.Translate(_speed * Time.fixedDeltaTime * Vector2.up);
     }
 }

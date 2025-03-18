@@ -1,11 +1,15 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(CapsuleCollider2D))]
-public class DmgSender : GameMonoBehaviour
+[RequireComponent(typeof(Collider2D))]
+public abstract class DmgSender : GameMonoBehaviour
 {
-    [SerializeField] private CapsuleCollider2D _collider;
-    [SerializeField] private int _damage = 1;
+    [SerializeField] protected Collider2D _collider;
+    [SerializeField] protected int damage = 1;
+
+
+    protected abstract void OnTriggerEnter2D(Collider2D collision);
+    protected abstract void LoadCollider();
 
     protected override void LoadComponents()
     {
@@ -13,21 +17,4 @@ public class DmgSender : GameMonoBehaviour
         LoadCollider();
     }
 
-    private void LoadCollider()
-    {
-        if(_collider != null) return;
-        _collider = GetComponent<CapsuleCollider2D>();
-        Debug.Log("LoadCollider", gameObject);
-    }
-
-    public void SetDamage(int damage)
-    {
-        _damage = damage;
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!collision.TryGetComponent(out DmgReceiver receiver)) return;
-        receiver.ReceiveDamage(_damage);
-    }
 }

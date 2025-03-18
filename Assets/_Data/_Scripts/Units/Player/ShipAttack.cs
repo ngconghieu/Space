@@ -12,7 +12,7 @@ public class ShipAttack : GameMonoBehaviour
     private void Start()
     {
         LoadParameters();
-        InvokeRepeating(nameof(Fire), _fireRate, 1);
+        InvokeRepeating(nameof(Fire), 0, _fireRate);
     }
 
 
