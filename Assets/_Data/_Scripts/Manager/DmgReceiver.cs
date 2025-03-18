@@ -2,47 +2,78 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class DmgReceiver : GameMonoBehaviour
+[RequireComponent(typeof(Rigidbody2D))]
+
+public abstract class DmgReceiver : GameMonoBehaviour
 {
-    [SerializeField] private int _health;
-    [SerializeField] private int _maxHealth = 10;
+    [SerializeField] protected Collider2D _collider;
+    [SerializeField] protected Rigidbody2D rb;
+    [SerializeField] protected int health;
+    [SerializeField] protected int maxHealth = 10;
+    public event Action OnDeath;
+
+    public int Health => health;
 
     private void OnEnable()
     {
-        SetHealth();
+        SetParameters();
     }
 
-    protected void SetHealth()
+    #region LoadComponents
+    protected override void LoadComponents()
     {
-        _health = _maxHealth;
+        base.LoadComponents();
+        LoadRigibody();
+        LoadCollider();
+    }
+
+    protected void LoadRigibody()
+    {
+        if (rb != null) return;
+        rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = 0;
+        Debug.Log("LoadRigibody", gameObject);
+    }
+
+    protected abstract void LoadCollider();
+    #endregion
+
+    protected void SetParameters()
+    {
+        health = maxHealth;
     }
 
     protected void SetMaxHealth(int maxHealth)
     {
-        _maxHealth = maxHealth;
-        SetHealth();
+        this.maxHealth = maxHealth;
+        SetParameters();
     }
 
     public void ReceiveDamage(int damage)
     {
-        _health -= damage;
-        if (_health <= 0)
+        health -= damage;
+        if (health <= 0)
         {
-            _health = 0;
+            health = 0;
             Die();
         }
     }
 
     public virtual void Die()
     {
+        NotifyDeath();
         gameObject.SetActive(false);
     }
 
     public void Heal(int health)
     {
-        _health += health;
-        if (_health > _maxHealth)
-            _health = _maxHealth;
+        this.health += health;
+        if (this.health > maxHealth)
+            this.health = maxHealth;
     }
 
+    public void NotifyDeath()
+    {
+        OnDeath?.Invoke();
+    }
 }

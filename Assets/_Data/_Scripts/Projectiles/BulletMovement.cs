@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BulletMovement : GameMonoBehaviour
 {
-    [SerializeField] private float _speed = 5;
+    [SerializeField] private float _speed = 15;
 
     private void FixedUpdate()
     {

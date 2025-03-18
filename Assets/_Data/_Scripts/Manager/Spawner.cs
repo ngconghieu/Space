@@ -45,7 +45,6 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : GameMonoBehav
     {
         T newPrefab = GetPrefabFromPool(prefab);
         newPrefab.transform.SetPositionAndRotation(position, rotation);
-        newPrefab.gameObject.SetActive(true);
         newPrefab.name = prefab.name;
         return newPrefab;
     }
@@ -54,8 +53,13 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : GameMonoBehav
     {
         for (int i = 0; i < _pools.Count; i++)
         {
-            if (_prefabs[i].name.Equals(prefab.name))
-                return _prefabs[i];
+            if (_pools[i].name.Equals(prefab.name))
+            {
+                T prefabInPool = _pools[i];
+                prefabInPool.gameObject.SetActive(true);
+                _pools.Remove(_pools[i]);
+                return prefabInPool;
+            }
         }
         //create new prefab
         return Spawn(prefab);
