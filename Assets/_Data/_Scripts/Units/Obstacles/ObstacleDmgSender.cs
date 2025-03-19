@@ -21,7 +21,7 @@ public class ObstacleDmgSender : DmgSender
         if(_collider is CircleCollider2D circleCollider)
         {
             circleCollider.isTrigger = true;
-            circleCollider.radius = 1;
+            circleCollider.radius = .8f;
 
         }
         Debug.Log("LoadCollider", gameObject);

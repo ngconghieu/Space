@@ -19,13 +19,6 @@ public class DespawnEffect : Despawner<EffectCtrl>
             Despawn(_effectCtrl);
     }
 
-    protected override void LoadCtrl()
-    {
-        if (_effectCtrl != null) return;
-        _effectCtrl = GetComponentInParent<EffectCtrl>();
-        Debug.Log("LoadEffectCtrl", gameObject);
-    }
-
     protected override void OnEnable()
     {
         _timer = 0f;

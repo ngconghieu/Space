@@ -3,6 +3,7 @@ using UnityEngine;
 public class BulletCtrl : GameMonoBehaviour
 {
     [SerializeField] private DespawnBullet _despawnBullet;
+
     public DespawnBullet DespawnBullet => _despawnBullet;
 
     protected override void LoadComponents()
@@ -17,4 +18,5 @@ public class BulletCtrl : GameMonoBehaviour
         _despawnBullet = GetComponentInChildren<DespawnBullet>();
         Debug.Log("LoadDespawnBullet", gameObject);
     }
+
 }

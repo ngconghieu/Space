@@ -23,7 +23,7 @@ public class ShipAttack : GameMonoBehaviour
 
     private void LoadParameters()
     {
-        _bulletCtrl = BulletManager.Instance.GetPrefab(_bulletIndex); //Need to improve
+        _bulletCtrl = BulletManager.Instance.GetPrefab($"Bullet_{_bulletIndex}");
     }
 
     #region LoadComponents
@@ -51,8 +51,8 @@ public class ShipAttack : GameMonoBehaviour
     {
         if (!_isFire) return;
         BulletManager.Instance.Spawn(
-            _bulletCtrl, 
-            _firePoint.position, 
+            _bulletCtrl,
+            _firePoint.position,
             transform.parent.rotation
         );
     }

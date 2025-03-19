@@ -15,7 +15,19 @@ public class DespawnBullet : Despawner<BulletCtrl>
     private void FixedUpdate()
     {
         HandleDespawn();
-        
+    }
+
+    protected override void LoadComponents()
+    {
+        base.LoadComponents();
+        LoadBulletCtrl();
+    }
+
+    private void LoadBulletCtrl()
+    {
+        if (_bulletCtrl != null) return;
+        _bulletCtrl = GetComponentInParent<BulletCtrl>();
+        Debug.Log("LoadBulletCtrl", gameObject);
     }
 
     private void HandleDespawn()
@@ -24,13 +36,4 @@ public class DespawnBullet : Despawner<BulletCtrl>
         if (_timer > _timeToDespawn)
             Despawn(_bulletCtrl);
     }
-
-    protected override void LoadCtrl()
-    {
-        if (_bulletCtrl != null) return;
-        _bulletCtrl = GetComponentInParent<BulletCtrl>();
-        Debug.Log("LoadBulletCtrl", gameObject);
-    }
-
-    
 }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
+public abstract class Spawner<T> : Singleton<Spawner<T>> where T : GameMonoBehaviour
 {
     [SerializeField] private Transform _holder;
     private readonly Dictionary<string, T> _prefabs = new();
@@ -25,7 +25,7 @@ public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
             _holder = new GameObject("Holder").transform;
             _holder.transform.SetParent(transform);
         }
-        Debug.Log("LoadHolder", gameObject);
+        //Debug.Log("LoadHolder", gameObject);
     }
 
     private void LoadPrefabs()
@@ -36,7 +36,7 @@ public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
             _prefabs.Add(prefab.name, prefab);
             prefab.gameObject.SetActive(false);
         }
-        Debug.Log("LoadPrefabs", gameObject);
+        //Debug.Log("LoadPrefabs", gameObject);
     }
 
     #endregion
@@ -64,5 +64,9 @@ public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
         prefab.gameObject.SetActive(false);
     }
 
-    public abstract T GetPrefab(int prefab);
+    public T GetPrefab(string name)
+    {
+        if (!_prefabs.TryGetValue(name, out T prefab)) return null;
+        return prefab;
+    }
 }

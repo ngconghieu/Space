@@ -10,7 +10,7 @@ public class BulletDmgSender : DmgSender
     {
         if (!collision.TryGetComponent(out DmgReceiver receiver)) return;
         receiver.ReceiveDamage(damage);
-        EffectCtrl effect = EffectManager.Instance.GetPrefab(0);
+        EffectCtrl effect = EffectManager.Instance.GetPrefab("Effect_0");
         Quaternion rotation = Quaternion.Euler(0, 0, transform.parent.rotation.z);
         EffectManager.Instance.Spawn(
             effect,

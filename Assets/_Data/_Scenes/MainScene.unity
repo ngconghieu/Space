@@ -808,6 +808,7 @@ MonoBehaviour:
   rb: {fileID: 767134309}
   health: 0
   maxHealth: 10
+  _force: 10
 --- !u!50 &767134309
 Rigidbody2D:
   serializedVersion: 5
@@ -876,11 +877,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 867694556}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f623d7cb9357e840be2a2dfe2579fc0, type: 3}
+  m_Script: {fileID: 11500000, guid: 9197209833866cf449694feda1327062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dmgReceiver: {fileID: 1361329887}
-  _obstacleCtrl: {fileID: 1809254776}
 --- !u!1 &960245900
 GameObject:
   m_ObjectHideFlags: 0
@@ -928,9 +927,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _holder: {fileID: 503876421}
-  _prefabs:
-  - {fileID: 1809254776}
-  _pools: []
 --- !u!1 &1000874363
 GameObject:
   m_ObjectHideFlags: 0
@@ -1071,9 +1067,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _holder: {fileID: 1931217979}
-  _prefabs:
-  - {fileID: 1484133966}
-  _pools: []
 --- !u!1 &1361329885
 GameObject:
   m_ObjectHideFlags: 0
@@ -1124,6 +1117,7 @@ MonoBehaviour:
   rb: {fileID: 1361329888}
   health: 0
   maxHealth: 10
+  _obstacleCtrl: {fileID: 1809254776}
 --- !u!50 &1361329888
 Rigidbody2D:
   serializedVersion: 5
@@ -1186,7 +1180,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 1
+  m_Radius: 0.8
 --- !u!1 &1484133964
 GameObject:
   m_ObjectHideFlags: 0
@@ -1203,7 +1197,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1484133965
 Transform:
   m_ObjectHideFlags: 0
@@ -1683,7 +1677,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1809254775}
   - component: {fileID: 1809254776}
-  - component: {fileID: 1809254777}
   m_Layer: 0
   m_Name: Obstacle_0
   m_TagString: Untagged
@@ -1723,42 +1716,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66b5c010a0857f949bbe5dfc688b9b8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!58 &1809254777
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1809254774}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 1
+  _despawnObstacle: {fileID: 867694558}
 --- !u!1 &1859394614
 GameObject:
   m_ObjectHideFlags: 0
@@ -1899,9 +1857,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _holder: {fileID: 1692142538}
-  _prefabs:
-  - {fileID: 417352155}
-  _pools: []
 --- !u!4 &1920162830
 Transform:
   m_ObjectHideFlags: 0
@@ -1929,6 +1884,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1921855495}
   - component: {fileID: 1921855496}
+  - component: {fileID: 1921855497}
   m_Layer: 0
   m_Name: PlayerShip
   m_TagString: Untagged
@@ -1992,6 +1948,19 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: -0.02}
   m_Size: {x: 0.5, y: 1}
   m_Direction: 0
+--- !u!114 &1921855497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1921855494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67c09133b3ac0794dbe0f3730a26c4f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bulletCtrl: {fileID: 0}
 --- !u!1 &1931217978
 GameObject:
   m_ObjectHideFlags: 0
@@ -2136,7 +2105,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 1
+  m_Radius: 0.8
 --- !u!1 &2022365554
 GameObject:
   m_ObjectHideFlags: 0
