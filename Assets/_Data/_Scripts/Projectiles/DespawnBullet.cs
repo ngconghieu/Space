@@ -7,7 +7,7 @@ public class DespawnBullet : Despawner<BulletCtrl>
     [SerializeField] private float _timeToDespawn = 6;
     private float _timer;
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
         _timer = 0;
     }
@@ -18,27 +18,19 @@ public class DespawnBullet : Despawner<BulletCtrl>
         
     }
 
-    #region LoadComponents
-    protected override void LoadComponents()
+    private void HandleDespawn()
     {
-        base.LoadComponents();
-        LoadBulletCtrl();
+        _timer += Time.fixedDeltaTime;
+        if (_timer > _timeToDespawn)
+            Despawn(_bulletCtrl);
     }
 
-    private void LoadBulletCtrl()
+    protected override void LoadCtrl()
     {
         if (_bulletCtrl != null) return;
         _bulletCtrl = GetComponentInParent<BulletCtrl>();
         Debug.Log("LoadBulletCtrl", gameObject);
     }
-    #endregion
 
-    private void HandleDespawn()
-    {
-        _timer += Time.fixedDeltaTime;
-        if (_timer > _timeToDespawn)
-        {
-            Despawn(_bulletCtrl);
-        }
-    }
+    
 }

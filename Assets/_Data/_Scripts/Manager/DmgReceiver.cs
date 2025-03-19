@@ -10,7 +10,6 @@ public abstract class DmgReceiver : GameMonoBehaviour
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected int health;
     [SerializeField] protected int maxHealth = 10;
-    public event Action OnDeath;
 
     public int Health => health;
 
@@ -57,12 +56,8 @@ public abstract class DmgReceiver : GameMonoBehaviour
             health = 0;
             Die();
         }
-    }
-
-    public virtual void Die()
-    {
-        NotifyDeath();
-        gameObject.SetActive(false);
+        else
+            Hurt();
     }
 
     public void Heal(int health)
@@ -72,8 +67,7 @@ public abstract class DmgReceiver : GameMonoBehaviour
             this.health = maxHealth;
     }
 
-    public void NotifyDeath()
-    {
-        OnDeath?.Invoke();
-    }
+    public abstract void Die();
+
+    public abstract void Hurt();
 }

@@ -23,7 +23,7 @@ public class ShipAttack : GameMonoBehaviour
 
     private void LoadParameters()
     {
-        _bulletCtrl = BulletManager.Instance.GetPrefab(_bulletIndex);
+        _bulletCtrl = BulletManager.Instance.GetPrefab(_bulletIndex); //Need to improve
     }
 
     #region LoadComponents

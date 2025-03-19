@@ -4,6 +4,17 @@ using UnityEngine;
 [RequireComponent(typeof(CapsuleCollider2D))]
 public class PlayerDmgReceiver : DmgReceiver
 {
+    [SerializeField] private float _force = 10;
+    public override void Die()
+    {
+        
+    }
+
+    public override void Hurt()
+    {
+        rb.AddForce(_force * Vector2.down);
+    }
+
     protected override void LoadCollider()
     {
         if (_collider != null) return;

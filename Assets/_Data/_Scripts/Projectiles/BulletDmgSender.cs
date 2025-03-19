@@ -1,17 +1,37 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(CapsuleCollider2D))]
 public class BulletDmgSender : DmgSender
 {
-    protected override void SetValues()
-    {
-        base.SetValues();
-        SetDmg(1);
-    }
+    [SerializeField] private BulletCtrl _bulletCtrl;
+
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision.TryGetComponent(out DmgReceiver receiver)) return;
         receiver.ReceiveDamage(damage);
+        EffectCtrl effect = EffectManager.Instance.GetPrefab(0);
+        Quaternion rotation = Quaternion.Euler(0, 0, transform.parent.rotation.z);
+        EffectManager.Instance.Spawn(
+            effect,
+            transform.parent.position,
+            rotation
+        );
+        _bulletCtrl.DespawnBullet.Despawn(_bulletCtrl);
+    }
+
+    #region LoadComponents
+    protected override void LoadComponents()
+    {
+        base.LoadComponents();
+        LoadBulletCtrl();
+    }
+
+    private void LoadBulletCtrl()
+    {
+        if (_bulletCtrl != null) return;
+        _bulletCtrl = GetComponentInParent<BulletCtrl>();
+        Debug.Log("LoadBulletCtrl", gameObject);
     }
 
     protected override void LoadCollider()
@@ -25,5 +45,5 @@ public class BulletDmgSender : DmgSender
         }
         Debug.Log("LoadCollider", gameObject);
     }
-
+    #endregion
 }

@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Spawner<T> : Singleton<Spawner<T>> where T : GameMonoBehaviour
+public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
 {
     [SerializeField] private Transform _holder;
-    [SerializeField] protected List<T> _prefabs = new();
-    [SerializeField] private List<T> _pools = new();
+    private readonly Dictionary<string, T> _prefabs = new();
+    private readonly ObjectPool<T> _objectPool = new();
 
     #region LoadComponents
     protected override void LoadComponents()
@@ -33,7 +33,7 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : GameMonoBehav
         if (_prefabs.Count != 0) return;
         foreach (var prefab in transform.GetComponentsInChildren<T>())
         {
-            _prefabs.Add(prefab);
+            _prefabs.Add(prefab.name, prefab);
             prefab.gameObject.SetActive(false);
         }
         Debug.Log("LoadPrefabs", gameObject);
@@ -43,26 +43,12 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : GameMonoBehav
 
     public virtual T Spawn(T prefab, Vector2 position, Quaternion rotation)
     {
-        T newPrefab = GetPrefabFromPool(prefab);
+        T newPrefab = _objectPool.GetFromPool(prefab);
+        if (newPrefab != null) return newPrefab;
+        newPrefab = Spawn(prefab);
         newPrefab.transform.SetPositionAndRotation(position, rotation);
         newPrefab.name = prefab.name;
         return newPrefab;
-    }
-
-    private T GetPrefabFromPool(T prefab)
-    {
-        for (int i = 0; i < _pools.Count; i++)
-        {
-            if (_pools[i].name.Equals(prefab.name))
-            {
-                T prefabInPool = _pools[i];
-                prefabInPool.gameObject.SetActive(true);
-                _pools.Remove(_pools[i]);
-                return prefabInPool;
-            }
-        }
-        //create new prefab
-        return Spawn(prefab);
     }
 
     public virtual T Spawn(T prefab)
@@ -74,7 +60,7 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : GameMonoBehav
 
     public virtual void Despawn(T prefab)
     {
-        _pools.Add(prefab);
+        _objectPool.AddToPool(prefab);
         prefab.gameObject.SetActive(false);
     }
 
