@@ -3,10 +3,10 @@ using UnityEngine.Events;
 
 public class EventManager
 {
-    static readonly Dictionary<string, UnityEvent<object>> _events = new();
-    static readonly Dictionary<string, object> _eventData = new();
+    static readonly Dictionary<GameEvent, UnityEvent<object>> _events = new();
+    static readonly Dictionary<GameEvent, object> _eventData = new();
 
-    public static void StartListening(string eventName, UnityAction<object> callback)
+    public static void StartListening(GameEvent eventName, UnityAction<object> callback)
     {
         if (_events.TryGetValue(eventName, out UnityEvent<object> thisEvent))
         {
@@ -21,7 +21,7 @@ public class EventManager
         }
     }
 
-    public static void StopListening(string eventName, UnityAction<object> callback)
+    public static void StopListening(GameEvent eventName, UnityAction<object> callback)
     {
         if (_events.TryGetValue(eventName, out UnityEvent<object> thisEvent))
         {
@@ -29,7 +29,7 @@ public class EventManager
         }
     }
 
-    public static void EmitEvent(string eventName, object data = null)
+    public static void EmitEvent(GameEvent eventName, object data = null)
     {
         if (_eventData.ContainsKey(eventName))
         {
@@ -46,7 +46,7 @@ public class EventManager
         }
     }
 
-    public static T GetData<T>(string eventName)
+    public static T GetData<T>(GameEvent eventName)
     {
         if (_eventData.TryGetValue(eventName, out object data))
         {
@@ -55,12 +55,7 @@ public class EventManager
         return default;
     }
 }
-
-public class EventName
+ public enum GameEvent
 {
-    // Define your own event IDs
-    public class Test
-    {
-        public const string TestEvent = "Test Event";
-    }
+    Ctrl,
 }
