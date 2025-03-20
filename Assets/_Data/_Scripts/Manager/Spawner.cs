@@ -44,7 +44,11 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : GameMonoBehav
     public virtual T Spawn(T prefab, Vector2 position, Quaternion rotation)
     {
         T newPrefab = _objectPool.GetFromPool(prefab);
-        if (newPrefab != null) return newPrefab;
+        if (newPrefab != null)
+        {
+            newPrefab.transform.SetPositionAndRotation(position, rotation);
+            return newPrefab;
+        }
         newPrefab = Spawn(prefab);
         newPrefab.transform.SetPositionAndRotation(position, rotation);
         newPrefab.name = prefab.name;
@@ -61,7 +65,6 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : GameMonoBehav
     public virtual void Despawn(T prefab)
     {
         _objectPool.AddToPool(prefab);
-        prefab.gameObject.SetActive(false);
     }
 
     public T GetPrefab(string name)

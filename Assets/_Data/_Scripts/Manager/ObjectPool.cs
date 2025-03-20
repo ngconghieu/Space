@@ -3,21 +3,30 @@ using UnityEngine;
 
 public class ObjectPool<T> where T : GameMonoBehaviour
 {
-    private Dictionary<string, T> _pools = new();
+    private readonly Dictionary<string, Queue<T>> _pools = new();
 
     public T GetFromPool(T prefab)
     {
-        if(!_pools.TryGetValue(prefab.name, out T pooledPrefab)) return null;
-        pooledPrefab.gameObject.SetActive(true);
-        _pools.Remove(prefab.name);
-        return pooledPrefab;
+        if (!_pools.TryGetValue(prefab.name, out var pooledPrefab)) return null;
+        if (pooledPrefab.Count == 0) return null;
+        var _prefab = pooledPrefab.Dequeue();
+        _prefab.gameObject.SetActive(true);
+        return _prefab;
     }
 
     public void AddToPool(T prefab)
     {
-        if (_pools.ContainsKey(prefab.name)) return;
-        _pools.Add(prefab.name, prefab);
-        prefab.gameObject.SetActive(false);
+        if (_pools.TryGetValue(prefab.name, out var values))
+        {
+            prefab.gameObject.SetActive(false);
+            values.Enqueue(prefab);
+        }
+        else
+        {
+            Queue<T> queue = new();
+            queue.Enqueue(prefab);
+            _pools.Add(prefab.name, queue);
+        }
     }
 
 }
