@@ -16,6 +16,7 @@ public class ObjectPool<T> where T : GameMonoBehaviour
 
     public void AddToPool(T prefab)
     {
+        if (prefab == null) return;
         if (_pools.TryGetValue(prefab.name, out var values))
         {
             prefab.gameObject.SetActive(false);

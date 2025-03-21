@@ -17,6 +17,7 @@ public abstract class DmgSender : GameMonoBehaviour
     {
         damage = dmg;
     }
+
     protected abstract void OnTriggerEnter2D(Collider2D collision);
     protected abstract void LoadCollider();
 }

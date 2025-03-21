@@ -3,17 +3,40 @@ using UnityEngine;
 
 public class PlayerShipCtrl : GameMonoBehaviour
 {
-    [SerializeField] private BulletCtrl _bulletCtrl;
+    [SerializeField] private BulletManager _bulletManager;
+    [SerializeField] private ShipAttack _shipAttack;
 
-    public BulletCtrl BulletCtrl => _bulletCtrl;
+    public BulletManager BulletManager => _bulletManager;
+
+    private void Start()
+    {
+        Initialize();
+    }
+
+    private void Initialize()
+    {
+        _shipAttack.Initialize(this);
+    }
 
     protected override void LoadComponents()
     {
         base.LoadComponents();
-        LoadBulletCtrl();
+        LoadBulletManager();
+        LoadShipAttack();
     }
 
-    private void LoadBulletCtrl()
+    private void LoadShipAttack()
     {
+        if (_shipAttack != null) return;
+        _shipAttack = GetComponentInChildren<ShipAttack>();
+        Debug.Log("LoadShipAttack", gameObject);
     }
+
+    private void LoadBulletManager()
+    {
+        if (_bulletManager != null) return;
+        _bulletManager = FindAnyObjectByType<BulletManager>();
+        Debug.Log("LoadBulletManager", gameObject);
+    }
+
 }

@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class DespawnObstacle : Despawner<ObstacleCtrl>
 {
-    protected override void OnEnable()
+    public override void Initialize(ObstacleCtrl ctrl)
     {
-        
+        this.ctrl = ctrl;
     }
+
 }

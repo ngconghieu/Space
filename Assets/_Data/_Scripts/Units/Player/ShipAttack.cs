@@ -8,22 +8,16 @@ public class ShipAttack : GameMonoBehaviour
     [SerializeField] private bool _isFire = false;
     [SerializeField] private int _bulletIndex = 0;
     [SerializeField] private float _fireRate = 0.1f;
+    private PlayerShipCtrl _playerShipCtrl;
 
     private void Start()
     {
-        LoadParameters();
         InvokeRepeating(nameof(Fire), 0, _fireRate);
     }
-
 
     private void Update()
     {
         HandleFire();
-    }
-
-    private void LoadParameters()
-    {
-        _bulletCtrl = BulletManager.Instance.GetPrefab($"Bullet_{_bulletIndex}");
     }
 
     #region LoadComponents
@@ -45,12 +39,19 @@ public class ShipAttack : GameMonoBehaviour
         }
         Debug.Log("LoadFirePoint", gameObject);
     }
+
+    public void Initialize(PlayerShipCtrl ctrl)
+    {
+        this._playerShipCtrl = ctrl;
+    }
     #endregion
 
     private void Fire()
     {
         if (!_isFire) return;
-        BulletManager.Instance.Spawn(
+        if (_bulletCtrl == null)
+            _bulletCtrl = _playerShipCtrl.BulletManager.GetPrefab($"Bullet_{_bulletIndex}");
+        _playerShipCtrl.BulletManager.Spawn(
             _bulletCtrl,
             _firePoint.position,
             transform.parent.rotation

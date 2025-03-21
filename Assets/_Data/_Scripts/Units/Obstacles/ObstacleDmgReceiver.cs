@@ -4,20 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(CircleCollider2D))]
 public class ObstacleDmgReceiver : DmgReceiver
 {
-    [SerializeField] private ObstacleCtrl _obstacleCtrl;
-
-    protected override void LoadComponents()
-    {
-        base.LoadComponents();
-        LoadObstacleCtrl();
-    }
-
-    private void LoadObstacleCtrl()
-    {
-        if (_obstacleCtrl != null) return;
-        _obstacleCtrl = GetComponentInParent<ObstacleCtrl>();
-        Debug.Log("LoadObstacleCtrl", gameObject);
-    }
+    private ObstacleCtrl _obstacleCtrl;
 
     protected override void LoadCollider()
     {
@@ -32,11 +19,15 @@ public class ObstacleDmgReceiver : DmgReceiver
 
     public override void Die()
     {
-        _obstacleCtrl.DespawnObstacle.Despawn(_obstacleCtrl);
+        _obstacleCtrl.DespawnObstacle.Despawn();
     }
 
     public override void Hurt()
     {
     }
 
+    public void Initialize(ObstacleCtrl obstacleCtrl)
+    {
+        _obstacleCtrl = obstacleCtrl;
+    }
 }

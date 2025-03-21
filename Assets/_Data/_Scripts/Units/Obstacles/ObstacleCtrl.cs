@@ -6,6 +6,11 @@ public class ObstacleCtrl : GameMonoBehaviour
     [SerializeField] private DespawnObstacle _despawnObstacle;
     public DespawnObstacle DespawnObstacle => _despawnObstacle;
 
+    private void Start()
+    {
+        _despawnObstacle.Initialize(this);
+    }
+
     protected override void LoadComponents()
     {
         base.LoadComponents();

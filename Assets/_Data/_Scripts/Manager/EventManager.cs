@@ -57,5 +57,5 @@ public class EventManager
 }
  public enum GameEvent
 {
-    Ctrl,
+    Despawn,
 }

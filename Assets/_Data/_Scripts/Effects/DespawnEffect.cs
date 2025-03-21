@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class DespawnEffect : Despawner<EffectCtrl>
 {
-    [SerializeField] private EffectCtrl _effectCtrl;
     [SerializeField] private float _despawnTime = 2f;
     private float _timer = 0f;
 
@@ -12,15 +11,20 @@ public class DespawnEffect : Despawner<EffectCtrl>
         HandleDespawn();
     }
 
+    public override void Initialize(EffectCtrl ctrl)
+    {
+        this.ctrl = ctrl;
+    }
+
     private void HandleDespawn()
     {
         _timer += Time.fixedDeltaTime;
         if (_timer > _despawnTime)
-            Despawn(_effectCtrl);
+            Despawn();
     }
 
-    protected override void OnEnable()
+    private void OnEnable()
     {
-        _timer = 0f;
+        _timer = 0;
     }
 }

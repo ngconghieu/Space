@@ -280,7 +280,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6019040ac9839154aad24c578974bdfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _effectCtrl: {fileID: 1484133966}
   _despawnTime: 2
 --- !u!1 &417352153
 GameObject:
@@ -331,9 +330,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _despawnBullet: {fileID: 630633532}
-  test:
-    m_PersistentCalls:
-      m_Calls: []
+  _bulletDmgSender: {fileID: 159773854}
+  _effectManager: {fileID: 1259908262}
 --- !u!1 &503876420
 GameObject:
   m_ObjectHideFlags: 0
@@ -630,7 +628,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dd167cdd62fd2f4b9a430181a6694c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bullet: {fileID: 0}
   _timeToDespawn: 6
 --- !u!1 &645037720
 GameObject:
@@ -832,7 +829,7 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -870,7 +867,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_AngularDamping: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -933,7 +930,6 @@ MonoBehaviour:
   rb: {fileID: 859813591}
   health: 0
   maxHealth: 1000
-  _obstacleCtrl: {fileID: 1048939811}
 --- !u!50 &859813591
 Rigidbody2D:
   serializedVersion: 5
@@ -948,7 +944,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_AngularDamping: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -1057,7 +1053,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &960245901
 Transform:
   m_ObjectHideFlags: 0
@@ -1415,7 +1411,6 @@ MonoBehaviour:
   rb: {fileID: 1361329888}
   health: 0
   maxHealth: 10
-  _obstacleCtrl: {fileID: 1809254776}
 --- !u!50 &1361329888
 Rigidbody2D:
   serializedVersion: 5
@@ -1430,7 +1425,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_AngularDamping: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -1525,6 +1520,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a98053c25284e343b06d640f1d10d66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _despawnEffect: {fileID: 315602122}
 --- !u!1 &1515992121
 GameObject:
   m_ObjectHideFlags: 0
@@ -2341,7 +2337,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67c09133b3ac0794dbe0f3730a26c4f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bulletCtrl: {fileID: 0}
+  _bulletManager: {fileID: 1920162829}
+  _shipAttack: {fileID: 1515992123}
 --- !u!1 &1931217978
 GameObject:
   m_ObjectHideFlags: 0

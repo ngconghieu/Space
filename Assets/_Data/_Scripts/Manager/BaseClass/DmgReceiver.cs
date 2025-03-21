@@ -31,6 +31,7 @@ public abstract class DmgReceiver : GameMonoBehaviour
         if (rb != null) return;
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0;
+        rb.angularDamping = 0;
         Debug.Log("LoadRigibody", gameObject);
     }
 
