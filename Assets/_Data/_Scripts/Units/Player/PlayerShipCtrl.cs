@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -15,11 +14,6 @@ public class PlayerShipCtrl : GameMonoBehaviour
     public ShipMovement ShipMovement => _shipMovement;
 
     private void Start()
-    {
-        Initialize();
-    }
-
-    private void Initialize()
     {
         _shipAttack.Initialize(this);
         _playerDmgReceiver.Initialize(this);

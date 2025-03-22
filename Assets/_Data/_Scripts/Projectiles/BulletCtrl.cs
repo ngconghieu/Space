@@ -14,11 +14,6 @@ public class BulletCtrl : GameMonoBehaviour
 
     private void Start()
     {
-        Initialize();
-    }
-
-    private void Initialize()
-    {
         _despawnBullet.Initialize(this);
         _bulletDmgSender.Initialize(this);
     }

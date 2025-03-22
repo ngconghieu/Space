@@ -9,9 +9,9 @@ public class ObstacleDmgReceiver : DmgReceiver
 
     protected override void LoadCollider()
     {
-        if (_collider != null) return;
-        _collider = GetComponent<CircleCollider2D>();
-        if (_collider is CircleCollider2D circleCollider)
+        if (col != null) return;
+        col = GetComponent<CircleCollider2D>();
+        if (col is CircleCollider2D circleCollider)
         {
             circleCollider.isTrigger = true;
             circleCollider.radius = .8f;
@@ -20,7 +20,6 @@ public class ObstacleDmgReceiver : DmgReceiver
 
     public override void Die()
     {
-        _collider.enabled = false;
         SpawnEffect();
         ctrl.DespawnObstacle.Despawn();
     }

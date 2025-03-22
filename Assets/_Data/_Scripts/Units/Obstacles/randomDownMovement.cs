@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class ObstacleMovement : GameMonoBehaviour
+public class RandomDownMovement : GameMonoBehaviour
 {
     [SerializeField, Range(1, 5)] private float _maxRandomSpeed;
     [SerializeField, Range(0.1f, 2)] private float _maxRandomRotationSpeed;
@@ -27,4 +27,7 @@ public class ObstacleMovement : GameMonoBehaviour
     {
         transform.parent.Translate(_maxRandomSpeed * Time.fixedDeltaTime * Vector2.down, Space.World);
     }
+
+    public float GetSpeed() => _maxRandomSpeed;
+    public float GetRotation() => _maxRandomRotationSpeed;
 }

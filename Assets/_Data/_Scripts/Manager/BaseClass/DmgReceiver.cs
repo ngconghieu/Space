@@ -1,12 +1,9 @@
-using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-
 public abstract class DmgReceiver : GameMonoBehaviour
 {
-
-    [SerializeField] protected Collider2D _collider;
+    [SerializeField] protected Collider2D col;
     [SerializeField] protected int health;
     [SerializeField] protected int maxHealth = 10;
 
@@ -15,6 +12,11 @@ public abstract class DmgReceiver : GameMonoBehaviour
     protected virtual void OnEnable()
     {
         SetParameters();
+    }
+
+    protected virtual void OnDisable()
+    {
+        col.enabled = false;
     }
 
     #region LoadComponents
@@ -27,10 +29,10 @@ public abstract class DmgReceiver : GameMonoBehaviour
     protected abstract void LoadCollider();
     #endregion
 
-    protected void SetParameters()
+    protected virtual void SetParameters()
     {
         health = maxHealth;
-        _collider.enabled = true;
+        col.enabled = true;
     }
 
     protected void SetMaxHealth(int maxHealth)

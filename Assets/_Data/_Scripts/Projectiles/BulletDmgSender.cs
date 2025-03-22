@@ -29,7 +29,7 @@ public class BulletDmgSender : DmgSender
     protected override void LoadCollider()
     {
         if (_collider != null) return;
-        _collider = GetComponent<Collider2D>() as CapsuleCollider2D;
+        _collider = GetComponent<Collider2D>();
         if (_collider is CapsuleCollider2D capsuleCollider)
         {
             capsuleCollider.isTrigger = true;

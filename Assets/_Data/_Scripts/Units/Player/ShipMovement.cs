@@ -18,7 +18,6 @@ public class ShipMovement : GameMonoBehaviour
     private void SetMousePos()
     {
         _mousePos = InputManager.Instance.Look;
-        _mousePos.z = 0;
     }
 
     private void HandleShipMovement()

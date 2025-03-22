@@ -5,7 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(CapsuleCollider2D))]
 public class PlayerDmgReceiver : DmgReceiver
 {
-    [SerializeField] private float _force = 10;
     [SerializeField] private float _delayHurt = 0.3f;
     [SerializeField] private float _invincibleTime = 1f;
     private PlayerShipCtrl ctrl;
@@ -13,12 +12,12 @@ public class PlayerDmgReceiver : DmgReceiver
     private IEnumerator HandleHit()
     {
         ctrl.ShipMovement.CanMove = false;
-        _collider.enabled = false;
+        col.enabled = false;
         yield return new WaitForSeconds(_delayHurt);
         ctrl.Rb.linearVelocity = Vector2.zero;
         ctrl.ShipMovement.CanMove = true;
         yield return new WaitForSeconds(_invincibleTime);
-        _collider.enabled = true;
+        col.enabled = true;
     }
 
     public override void Die()
@@ -33,9 +32,9 @@ public class PlayerDmgReceiver : DmgReceiver
 
     protected override void LoadCollider()
     {
-        if (_collider != null) return;
-        _collider = GetComponent<CapsuleCollider2D>();
-        if (_collider is CapsuleCollider2D capsuleCollider2D)
+        if (col != null) return;
+        col = GetComponent<CapsuleCollider2D>();
+        if (col is CapsuleCollider2D capsuleCollider2D)
         {
             capsuleCollider2D.isTrigger = true;
             capsuleCollider2D.size = new Vector2(.5f, 1);
@@ -49,11 +48,4 @@ public class PlayerDmgReceiver : DmgReceiver
         ctrl = playerShipCtrl;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!_collider.enabled) return;
-
-        Vector2 pushDir = (transform.position - collision.transform.position).normalized;
-        ctrl.Rb.AddForce(_force * pushDir, ForceMode2D.Impulse);
-    }
 }
