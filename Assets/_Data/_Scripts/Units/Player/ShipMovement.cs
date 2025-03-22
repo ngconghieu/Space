@@ -5,7 +5,7 @@ public class ShipMovement : GameMonoBehaviour
 {
     [SerializeField] private float _MovementSpeed = 0.4f;
     [SerializeField] private float _RotationSpeed = 5f;
-    [SerializeField] private bool _canMove = true;
+    public bool CanMove = true;
     private Vector3 _mousePos;
 
     private void FixedUpdate()
@@ -23,7 +23,7 @@ public class ShipMovement : GameMonoBehaviour
 
     private void HandleShipMovement()
     {
-        if (!_canMove) return;
+        if (!CanMove) return;
         transform.parent.position = Vector2.Lerp(
             transform.parent.position,
             _mousePos,

@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
 {
     [SerializeField] private Transform _holder;
-    private readonly Dictionary<string, T> _prefabs = new();
+    [SerializeField] private List<T> _prefabs = new();
     private readonly ObjectPool<T> _objectPool = new();
 
     #region LoadComponents
@@ -26,7 +26,7 @@ public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
             _holder = new GameObject("Holder").transform;
             _holder.transform.SetParent(transform);
         }
-        //Debug.Log("LoadHolder", gameObject);
+        Debug.Log("LoadHolder", gameObject);
     }
 
     private void LoadPrefabs()
@@ -34,10 +34,10 @@ public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
         if (_prefabs.Count != 0) return;
         foreach (var prefab in transform.GetComponentsInChildren<T>())
         {
-            _prefabs.Add(prefab.name, prefab);
+            _prefabs.Add(prefab);
             prefab.gameObject.SetActive(false);
         }
-        //Debug.Log("LoadPrefabs", gameObject);
+        Debug.Log("LoadPrefabs", gameObject);
     }
 
     #endregion
@@ -69,11 +69,8 @@ public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
         _objectPool.AddToPool(prefab);
     }
 
-    public T GetPrefab(string name)
-    {
-        if (!_prefabs.TryGetValue(name, out T prefab)) return null;
-        return prefab;
-    }
+    public T GetPrefab(string name) => 
+        _prefabs.Find(prefab => prefab.name.Equals(name));
 
     protected abstract void SubcribeEvent(T prefab);
 }

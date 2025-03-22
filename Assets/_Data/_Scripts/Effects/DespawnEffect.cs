@@ -1,30 +1,19 @@
-using System;
+using System.Collections;
 using UnityEngine;
 
 public class DespawnEffect : Despawner<EffectCtrl>
 {
     [SerializeField] private float _despawnTime = 2f;
-    private float _timer = 0f;
-
-    private void FixedUpdate()
-    {
-        HandleDespawn();
-    }
 
     public override void Initialize(EffectCtrl ctrl)
     {
         this.ctrl = ctrl;
+        StartCoroutine(HandleDespawn());
     }
 
-    private void HandleDespawn()
+    private IEnumerator HandleDespawn()
     {
-        _timer += Time.fixedDeltaTime;
-        if (_timer > _despawnTime)
-            Despawn();
-    }
-
-    private void OnEnable()
-    {
-        _timer = 0;
+        yield return new WaitForSeconds(_despawnTime);
+        Despawn();
     }
 }

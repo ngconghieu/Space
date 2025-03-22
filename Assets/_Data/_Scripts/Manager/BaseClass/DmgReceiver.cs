@@ -1,19 +1,18 @@
-using System;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-[RequireComponent(typeof(Rigidbody2D))]
 
 public abstract class DmgReceiver : GameMonoBehaviour
 {
+
     [SerializeField] protected Collider2D _collider;
-    [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected int health;
     [SerializeField] protected int maxHealth = 10;
 
     public int Health => health;
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         SetParameters();
     }
@@ -22,17 +21,7 @@ public abstract class DmgReceiver : GameMonoBehaviour
     protected override void LoadComponents()
     {
         base.LoadComponents();
-        LoadRigibody();
         LoadCollider();
-    }
-
-    protected void LoadRigibody()
-    {
-        if (rb != null) return;
-        rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 0;
-        rb.angularDamping = 0;
-        Debug.Log("LoadRigibody", gameObject);
     }
 
     protected abstract void LoadCollider();
@@ -41,6 +30,7 @@ public abstract class DmgReceiver : GameMonoBehaviour
     protected void SetParameters()
     {
         health = maxHealth;
+        _collider.enabled = true;
     }
 
     protected void SetMaxHealth(int maxHealth)
@@ -57,8 +47,7 @@ public abstract class DmgReceiver : GameMonoBehaviour
             health = 0;
             Die();
         }
-        else
-            Hurt();
+        Hurt();
     }
 
     public void Heal(int health)

@@ -18,16 +18,14 @@ public class ObjectPool<T> where T : GameMonoBehaviour
     {
         if (prefab == null) return;
         if (_pools.TryGetValue(prefab.name, out var values))
-        {
-            prefab.gameObject.SetActive(false);
             values.Enqueue(prefab);
-        }
         else
         {
             Queue<T> queue = new();
             queue.Enqueue(prefab);
             _pools.Add(prefab.name, queue);
         }
+        prefab.gameObject.SetActive(false);
     }
 
 }

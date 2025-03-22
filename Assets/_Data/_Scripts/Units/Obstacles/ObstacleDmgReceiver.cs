@@ -1,10 +1,11 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(CircleCollider2D))]
 public class ObstacleDmgReceiver : DmgReceiver
 {
-    private ObstacleCtrl _obstacleCtrl;
+    private ObstacleCtrl ctrl;
 
     protected override void LoadCollider()
     {
@@ -12,22 +13,31 @@ public class ObstacleDmgReceiver : DmgReceiver
         _collider = GetComponent<CircleCollider2D>();
         if (_collider is CircleCollider2D circleCollider)
         {
-            circleCollider.isTrigger = false;
+            circleCollider.isTrigger = true;
             circleCollider.radius = .8f;
         }
     }
 
     public override void Die()
     {
-        _obstacleCtrl.DespawnObstacle.Despawn();
+        _collider.enabled = false;
+        SpawnEffect();
+        ctrl.DespawnObstacle.Despawn();
+    }
+
+    private void SpawnEffect()
+    {
+        EffectCtrl effectCtrl = ctrl.EffectManager.GetPrefab("Effect_1");
+        ctrl.EffectManager.Spawn(effectCtrl, ctrl.transform.position, Quaternion.identity);
     }
 
     public override void Hurt()
     {
     }
 
-    public void Initialize(ObstacleCtrl obstacleCtrl)
+    public void Initialize(ObstacleCtrl ctrl)
     {
-        _obstacleCtrl = obstacleCtrl;
+        this.ctrl = ctrl;
     }
+
 }

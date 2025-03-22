@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class ShipAttack : GameMonoBehaviour
@@ -9,10 +10,12 @@ public class ShipAttack : GameMonoBehaviour
     [SerializeField] private int _bulletIndex = 0;
     [SerializeField] private float _fireRate = 0.1f;
     private PlayerShipCtrl _playerShipCtrl;
+    private WaitForSeconds _wait;
 
     private void Start()
     {
-        InvokeRepeating(nameof(Fire), 0, _fireRate);
+        _wait = new(_fireRate);
+        StartCoroutine(FireRoutine());
     }
 
     private void Update()
@@ -46,9 +49,19 @@ public class ShipAttack : GameMonoBehaviour
     }
     #endregion
 
+
+    private IEnumerator FireRoutine()
+    {
+        while (true)
+        {
+            if (_isFire)
+                Fire();
+            yield return _wait;
+        }
+    }
+
     private void Fire()
     {
-        if (!_isFire) return;
         if (_bulletCtrl == null)
             _bulletCtrl = _playerShipCtrl.BulletManager.GetPrefab($"Bullet_{_bulletIndex}");
         _playerShipCtrl.BulletManager.Spawn(
@@ -62,4 +75,11 @@ public class ShipAttack : GameMonoBehaviour
     {
         _isFire = InputManager.Instance.isLeftClick;
     }
+
+    //public void SetFireRate(float fireRate)
+    //{
+    //    if(Mathf.Approximately(_fireRate, fireRate)) return;
+    //    _fireRate = fireRate;
+    //    _wait = new WaitForSeconds(_fireRate);
+    //}
 }
