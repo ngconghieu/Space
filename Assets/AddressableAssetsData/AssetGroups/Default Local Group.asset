@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_GUID: 538be5cab5b93dc46a428b2cd629f002
+  m_SerializeEntries:
+  - m_GUID: 5e214b45c59217f438708255a03510c0
+    m_Address: Assets/_Data/Prefabs/Obstacle_0.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Prefab_Obstacle
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: c06b8ea4566abad4aac551fc3b064f2e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 49897c7d509e75f46b08ecee8da1c9f0, type: 2}
+    - {fileID: 11400000, guid: 375a2ba8b3890cf48b1401183cd20815, type: 2}

@@ -7,7 +7,6 @@ public class ShipAttack : GameMonoBehaviour
     [SerializeField] private BulletCtrl _bulletCtrl;
     [SerializeField] private Transform _firePoint;
     [SerializeField] private bool _isFire = false;
-    [SerializeField] private int _bulletIndex = 0;
     [SerializeField] private float _fireRate = 0.1f;
     private PlayerShipCtrl _playerShipCtrl;
     private WaitForSeconds _wait;
@@ -63,7 +62,7 @@ public class ShipAttack : GameMonoBehaviour
     private void Fire()
     {
         if (_bulletCtrl == null)
-            _bulletCtrl = _playerShipCtrl.BulletManager.GetPrefab($"Bullet_{_bulletIndex}");
+            _bulletCtrl = _playerShipCtrl.BulletManager.GetPrefab(PrefabName.BulletDefault);
         _playerShipCtrl.BulletManager.Spawn(
             _bulletCtrl,
             _firePoint.position,

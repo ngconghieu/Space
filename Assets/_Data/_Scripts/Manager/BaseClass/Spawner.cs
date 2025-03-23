@@ -4,7 +4,7 @@ using UnityEngine;
 public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
 {
     [SerializeField] private Transform _holder;
-    [SerializeField] private List<T> _prefabs = new();
+    private readonly Dictionary<string, T> _prefabs = new();
     private readonly ObjectPool<T> _objectPool = new();
 
     #region LoadComponents
@@ -33,10 +33,10 @@ public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
         if (_prefabs.Count != 0) return;
         foreach (var prefab in transform.GetComponentsInChildren<T>())
         {
-            _prefabs.Add(prefab);
+            _prefabs.Add(prefab.name, prefab);
             prefab.gameObject.SetActive(false);
         }
-        Debug.Log("LoadPrefabs", gameObject);
+        //Debug.Log("LoadPrefabs", gameObject);
     }
 
     #endregion
@@ -68,8 +68,8 @@ public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
         _objectPool.AddToPool(prefab);
     }
 
-    public T GetPrefab(string name) => 
-        _prefabs.Find(prefab => prefab.name.Equals(name));
+    public T GetPrefab(PrefabName name) =>
+        _prefabs.ContainsKey(name.ToString()) ? _prefabs[name.ToString()] : null;
 
     protected abstract void SubscribeEvent(T prefab);
     protected abstract void RegisterServices();

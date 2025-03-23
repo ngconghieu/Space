@@ -26,7 +26,7 @@ public class ObstacleDmgReceiver : DmgReceiver
 
     private void SpawnEffect()
     {
-        EffectCtrl effectCtrl = ctrl.EffectManager.GetPrefab("Effect_1");
+        EffectCtrl effectCtrl = ctrl.EffectManager.GetPrefab(PrefabName.Smoke_ObstacleDetroy);
         ctrl.EffectManager.Spawn(effectCtrl, ctrl.transform.position, Quaternion.identity);
     }
 

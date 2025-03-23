@@ -31,7 +31,7 @@ public class ObstacleManager : Spawner<ObstacleCtrl>
             Vector3 camPos = CameraManager.Instance.Camera.transform.position;
             float RandomX = Random.Range(camPos.x - 9, camPos.x + 9);
             Vector2 spawnPos = new(RandomX, camPos.y + 13);
-            ObstacleCtrl obstacle = GetPrefab("Obstacle_0");
+            ObstacleCtrl obstacle = GetPrefab(PrefabName.Obstacle_0);
             Spawn(obstacle, spawnPos, Quaternion.identity);
             yield return _wait;
         }

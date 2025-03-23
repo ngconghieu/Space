@@ -20,8 +20,8 @@ public class DespawnItem : Despawner<ItemCtrl>
         if (_collider != null) return;
         _collider = GetComponent<CircleCollider2D>();
         _collider.isTrigger = true;
-        _collider.radius = 0.55f;
-        _collider.offset = new Vector2(0, -0.1f);
+        _collider.radius = 0.5f;
+        _collider.offset = new Vector2(0, 0);
         Debug.Log("LoadCollider", gameObject);
     }
     #endregion

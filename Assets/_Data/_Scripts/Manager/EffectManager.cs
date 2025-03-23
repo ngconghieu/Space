@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class EffectManager : Spawner<EffectCtrl>
 {
     protected override void RegisterServices()
