@@ -16,6 +16,7 @@ public class BulletCtrl : GameMonoBehaviour
     {
         _despawnBullet.Initialize(this);
         _bulletDmgSender.Initialize(this);
+        _effectManager = ServiceLocator.Get<EffectManager>();
     }
 
     protected override void LoadComponents()
@@ -23,14 +24,6 @@ public class BulletCtrl : GameMonoBehaviour
         base.LoadComponents();
         LoadDespawnBullet();
         LoadBulletDmgSender();
-        LoadEffectManager();
-    }
-
-    private void LoadEffectManager()
-    {
-        if (_effectManager != null) return;
-        _effectManager = FindAnyObjectByType<EffectManager>();
-        Debug.Log("LoadEffectManager", gameObject);
     }
 
     private void LoadDespawnBullet()

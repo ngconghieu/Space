@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
 {
@@ -15,6 +13,7 @@ public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
         base.LoadComponents();
         LoadHolder();
         LoadPrefabs();
+        RegisterServices();
     }
 
     private void LoadHolder()
@@ -52,7 +51,7 @@ public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
         }
         newPrefab = Spawn(prefab);
         newPrefab.transform.SetPositionAndRotation(position, rotation);
-        SubcribeEvent(newPrefab);
+        SubscribeEvent(newPrefab);
         newPrefab.name = prefab.name;
         return newPrefab;
     }
@@ -72,5 +71,6 @@ public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
     public T GetPrefab(string name) => 
         _prefabs.Find(prefab => prefab.name.Equals(name));
 
-    protected abstract void SubcribeEvent(T prefab);
+    protected abstract void SubscribeEvent(T prefab);
+    protected abstract void RegisterServices();
 }

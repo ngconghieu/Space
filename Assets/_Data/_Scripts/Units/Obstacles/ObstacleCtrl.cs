@@ -17,7 +17,7 @@ public class ObstacleCtrl : GameMonoBehaviour
     {
         _despawnObstacle.Initialize(this);
         _obstacleDmgReceiver.Initialize(this);
-        ServiceLocator.Register<ObstacleCtrl>(this);
+        _effectManager = ServiceLocator.Get<EffectManager>();
     }
 
     protected override void LoadComponents()
@@ -26,14 +26,6 @@ public class ObstacleCtrl : GameMonoBehaviour
         LoadRigibody();
         LoadDespawnObstacle();
         LoadObstacleDmgReceiver();
-        LoadEffectManager();
-    }
-
-    private void LoadEffectManager()
-    {
-        if (_effectManager != null) return;
-        _effectManager = FindAnyObjectByType<EffectManager>();
-        Debug.Log("LoadEffectManager", gameObject);
     }
 
     private void LoadObstacleDmgReceiver()

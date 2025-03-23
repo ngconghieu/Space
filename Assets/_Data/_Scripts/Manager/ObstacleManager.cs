@@ -7,7 +7,7 @@ public class ObstacleManager : Spawner<ObstacleCtrl>
     [SerializeField] private int _maxSpawnObject = 100;
     private WaitForSeconds _wait;
 
-    protected override void SubcribeEvent(ObstacleCtrl prefab)
+    protected override void SubscribeEvent(ObstacleCtrl prefab)
     {
         prefab.DespawnObstacle.OnDespawn += Despawn;
     }
@@ -35,5 +35,10 @@ public class ObstacleManager : Spawner<ObstacleCtrl>
             Spawn(obstacle, spawnPos, Quaternion.identity);
             yield return _wait;
         }
+    }
+
+    protected override void RegisterServices()
+    {
+        ServiceLocator.Register<ObstacleManager>(this);
     }
 }

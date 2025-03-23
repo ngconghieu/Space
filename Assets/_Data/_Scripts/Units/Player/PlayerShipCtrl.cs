@@ -17,13 +17,13 @@ public class PlayerShipCtrl : GameMonoBehaviour
     {
         _shipAttack.Initialize(this);
         _playerDmgReceiver.Initialize(this);
+        _bulletManager = ServiceLocator.Get<BulletManager>();
     }
 
     protected override void LoadComponents()
     {
         base.LoadComponents();
         LoadRigibody();
-        LoadBulletManager();
         LoadShipAttack();
         LoadPlayerDmgReceiver();
         LoadShipMovement();
@@ -48,13 +48,6 @@ public class PlayerShipCtrl : GameMonoBehaviour
         if (_shipAttack != null) return;
         _shipAttack = GetComponentInChildren<ShipAttack>();
         Debug.Log("LoadShipAttack", gameObject);
-    }
-
-    private void LoadBulletManager()
-    {
-        if (_bulletManager != null) return;
-        _bulletManager = FindAnyObjectByType<BulletManager>();
-        Debug.Log("LoadBulletManager", gameObject);
     }
 
     private void LoadRigibody()
