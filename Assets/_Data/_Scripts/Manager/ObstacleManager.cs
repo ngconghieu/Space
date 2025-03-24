@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -29,7 +30,7 @@ public class ObstacleManager : Spawner<ObstacleCtrl>
         while (_maxSpawnObject-->0)
         {
             Vector3 camPos = CameraManager.Instance.Camera.transform.position;
-            float RandomX = Random.Range(camPos.x - 9, camPos.x + 9);
+            float RandomX = UnityEngine.Random.Range(camPos.x - 9, camPos.x + 9);
             Vector2 spawnPos = new(RandomX, camPos.y + 13);
             ObstacleCtrl obstacle = GetPrefab(PrefabName.Obstacle_0);
             Spawn(obstacle, spawnPos, Quaternion.identity);
@@ -41,4 +42,11 @@ public class ObstacleManager : Spawner<ObstacleCtrl>
     {
         ServiceLocator.Register<ObstacleManager>(this);
     }
+}
+
+[Serializable]
+public struct ObstacleDropItem
+{
+    public PrefabName PrefabName;
+    public float DropRate;
 }

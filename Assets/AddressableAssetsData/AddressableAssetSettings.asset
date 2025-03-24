@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 538be5cab5b93dc46a428b2cd629f002
   m_currentHash:
     serializedVersion: 2
-    Hash: cdeecd6031a2a64ac2009c85df8ce9b1
+    Hash: 8985f3b933ef708e0d892ae0bab02264
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -100,8 +100,8 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
-    - SO_Material
     - Prefab_Obstacle
+    - SO_Item
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: e612ebc73bd70bc4a84f8fbaadbb17fd, type: 2}

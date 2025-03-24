@@ -15,17 +15,27 @@ MonoBehaviour:
   m_GroupName: ScriptableObject
   m_GUID: 8372ec1a06e1d474eafc5823d8bffa15
   m_SerializeEntries:
+  - m_GUID: 675ad6a5e65f65f4490c8012ed327ebf
+    m_Address: Obstacle_0
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: be5b0e17cc0d3d74ab9edc746d0ad215
     m_Address: Material_GoldOre
     m_ReadOnly: 0
     m_SerializedLabels:
-    - SO_Material
+    - SO_Item
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cfdad61e23ab2e940ba552d62c777b4f
+    m_Address: Obstacle_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f5b5cfb6a28b8d146ba29d318897d67b
     m_Address: Material_CopperOre
     m_ReadOnly: 0
     m_SerializedLabels:
-    - SO_Material
+    - SO_Item
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: c06b8ea4566abad4aac551fc3b064f2e, type: 2}

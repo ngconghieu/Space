@@ -29,7 +29,7 @@ public class InventoryManager : Singleton<InventoryManager>
     {
         Addressables.LoadAssetsAsync<ItemProfiles>(_itemProfilesLabel, null).Completed += handle =>
         {
-            _itemProfiles = new List<ItemProfiles>(handle.Result);
+            _itemProfiles = new(handle.Result);
         };
     }
     #endregion
@@ -100,7 +100,10 @@ public class InventoryManager : Singleton<InventoryManager>
     }
     #endregion
 
-    private ItemProfiles GetItemProfiles(ItemName itemName) => 
+    #region RemoveItem
+    
+    #endregion
+    public ItemProfiles GetItemProfiles(ItemName itemName) => 
         _itemProfiles.Find(item => item.ItemName == itemName);
 }
 

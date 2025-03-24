@@ -20,14 +20,7 @@ public class ObstacleDmgReceiver : DmgReceiver
 
     public override void Die()
     {
-        SpawnEffect();
         ctrl.DespawnObstacle.Despawn();
-    }
-
-    private void SpawnEffect()
-    {
-        EffectCtrl effectCtrl = ctrl.EffectManager.GetPrefab(PrefabName.Smoke_ObstacleDetroy);
-        ctrl.EffectManager.Spawn(effectCtrl, ctrl.transform.position, Quaternion.identity);
     }
 
     public override void Hurt()
