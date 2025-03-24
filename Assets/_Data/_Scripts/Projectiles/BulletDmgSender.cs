@@ -5,20 +5,27 @@ using UnityEngine;
 public class BulletDmgSender : DmgSender
 {
     [SerializeField] private BulletCtrl _bulletCtrl;
+    private EffectCtrl _effect;
 
     public void Initialize(BulletCtrl bulletCtrl)
     {
         _bulletCtrl = bulletCtrl;
     }
 
+    private void Start()
+    {
+        _effect = _bulletCtrl.EffectManager.GetPrefab(PrefabName.Impact_Bullet);
+    }
+
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision.TryGetComponent(out DmgReceiver receiver)) return;
         receiver.ReceiveDamage(damage);
-        EffectCtrl effect = _bulletCtrl.EffectManager.GetPrefab(PrefabName.Impact_Bullet);
-        Quaternion rotation = Quaternion.Euler(0, 0, transform.parent.rotation.z);
+
+        float parentRotationZ = transform.parent.eulerAngles.z;
+        Quaternion rotation = Quaternion.Euler(0, 0, parentRotationZ + 180);
         _bulletCtrl.EffectManager.Spawn(
-            effect,
+            _effect,
             transform.parent.position,
             rotation
         );

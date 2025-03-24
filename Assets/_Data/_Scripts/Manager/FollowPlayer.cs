@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class FollowPlayer : MonoBehaviour
@@ -12,5 +13,27 @@ public class FollowPlayer : MonoBehaviour
             _player.position,
             Time.fixedDeltaTime * _speed
         );
+    }
+
+    private void Start()
+    {
+        StartCoroutine(Test());
+    }
+
+    private IEnumerator Test()
+    {
+        //while (true)
+        {
+            yield return new WaitForSeconds(1f);
+            InventoryManager.Instance.AddItem(ItemName.CopperOre, 26);
+            InventoryManager.Instance.AddItem(ItemName.CopperOre, 26);
+            InventoryManager.Instance.AddItem(ItemName.CopperOre, 26);
+            InventoryManager.Instance.AddItem(ItemName.CopperOre, 26);
+            InventoryManager.Instance.AddItem(ItemName.CopperOre, 26);
+            InventoryManager.Instance.AddItem(ItemName.CopperOre, 26);
+            InventoryManager.Instance.AddItem(ItemName.CopperOre, 26);
+            InventoryManager.Instance.AddItem(ItemName.CopperOre, 26);
+            InventoryManager.Instance.AddItem(ItemName.CopperOre, 26);
+        }
     }
 }

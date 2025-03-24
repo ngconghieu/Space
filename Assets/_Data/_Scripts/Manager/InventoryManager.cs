@@ -8,7 +8,15 @@ public class InventoryManager : Singleton<InventoryManager>
     [SerializeField] private int _maxInventorySize = 10;
     [SerializeField] private AssetLabelReference _itemProfilesLabel;
     [SerializeField] private List<ItemProfiles> _itemProfiles = new();
-    [SerializeField] private List<Item> _items = new();
+    [SerializeField] private Dictionary<string, Item> _items = new(); // ItemID, Item
+
+    #region Test
+    [SerializeField] private List<Item> _listItems = new();
+    private void Test()
+    {
+        _listItems = new(_items.Values);
+    }
+    #endregion
 
     #region LoadComponents
     protected override void LoadComponents()
@@ -26,72 +34,74 @@ public class InventoryManager : Singleton<InventoryManager>
     }
     #endregion
 
+    #region AddItem
     public void AddItem(ItemName itemName, int amount)
     {
-        if (amount <= 0) return;
         ItemProfiles itemProfiles = GetItemProfiles(itemName);
-        int currentAmount = amount; // backup amount
+        if (amount <= 0 || itemProfiles == null) return;
 
-        // check if there is enough space in inventory
-        if (!canAddItem(itemProfiles, currentAmount))
+        Dictionary<string, Item> items = new(_items); // clone _items
+        int currentAmount = amount;
+        int cntSpace = 0;
+
+        foreach (string key in _items.Keys)
         {
-            Debug.Log("Not enough space in inventory");
-            return;
+            if (cntSpace >= _maxInventorySize) break; // if inventory is full
+            ++cntSpace;
+
+            Item item = _items[key];
+
+            // if item is not same
+            if (!item.ItemProfiles.ItemName.Equals(itemProfiles.ItemName)) continue;
+
+            // if items is full
+            if (item.Amount == itemProfiles.MaxStack) continue;
+
+            StackItem(ref item, ref currentAmount);
+            items[key] = item;
         }
 
-        // stack item
-        StackItem(itemProfiles, ref currentAmount); 
-
-        // if item is not valid in _items
-        AddNewItem(itemProfiles, ref currentAmount);
-
+        AddItemIntoNewSpaces(items, itemProfiles, ref currentAmount, ref cntSpace);
+        if (currentAmount > 0) return;
+        _items = items;
+        Test();
     }
 
-    private bool canAddItem(ItemProfiles itemProfiles, int currentAmount)
+    private void StackItem(ref Item item, ref int currentAmount)
     {
-        int stackableSlot = 0;
-        for (int i = 0; i < _items.Count; i++)
+        int amount = item.ItemProfiles.MaxStack - item.Amount;
+        if (currentAmount >= amount)
         {
-            if (_items[i].ItemProfiles.Equals(itemProfiles))
-            {
-                stackableSlot += itemProfiles.MaxStack - _items[i].Amount;
-            }
-        }return false;
-    }
-
-    private void StackItem(ItemProfiles itemProfiles, ref int currentAmount)
-    {
-        
-    }
-
-    private void AddNewItem(ItemProfiles itemProfiles, ref int currentAmount)
-    {
-        while (currentAmount > 0)
+            item.Amount += amount;
+            currentAmount -= amount;
+        }
+        else
         {
-            int amount;
-            if (currentAmount > itemProfiles.MaxStack)
+            item.Amount += currentAmount;
+            currentAmount = 0;
+        }
+    }
+
+    private void AddItemIntoNewSpaces(Dictionary<string, Item> items, ItemProfiles itemProfiles, ref int currentAmount, ref int cntSpace)
+    {
+        while (currentAmount > 0 && ++cntSpace <= _maxInventorySize)
+        {
+            int amount = Math.Min(itemProfiles.MaxStack, currentAmount);
+            currentAmount -= amount;
+
+            string itemID = Guid.NewGuid().ToString();
+            items.Add(itemID, new()
             {
-                amount = itemProfiles.MaxStack;
-                currentAmount -= itemProfiles.MaxStack;
-            }
-            else
-            {
-                amount = currentAmount;
-                currentAmount = 0;
-            }
-            _items.Add(new()
-            {
-                ItemID = Guid.NewGuid().ToString(),
+                ItemID = itemID,
                 ItemProfiles = itemProfiles,
                 Amount = amount
             });
         }
     }
+    #endregion
 
-    private ItemProfiles GetItemProfiles(ItemName itemName)
-    {
-        return _itemProfiles.Find(item => item.ItemName == itemName.ToString());
-    }
+    private ItemProfiles GetItemProfiles(ItemName itemName) => 
+        _itemProfiles.Find(item => item.ItemName == itemName);
 }
 
 [Serializable]

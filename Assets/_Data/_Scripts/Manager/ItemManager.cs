@@ -24,4 +24,5 @@ public enum ItemName
 {
     None = 0,
     CopperOre = 1,
+    GoldOre = 2,
 }
