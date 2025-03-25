@@ -15,13 +15,19 @@ MonoBehaviour:
   m_GroupName: ScriptableObject
   m_GUID: 8372ec1a06e1d474eafc5823d8bffa15
   m_SerializeEntries:
+  - m_GUID: 16b963895a134cc48b36f4c532f32982
+    m_Address: Assets/_Data/_Scripts/Items/Rock_0.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO_Item
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 675ad6a5e65f65f4490c8012ed327ebf
     m_Address: Obstacle_0
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: be5b0e17cc0d3d74ab9edc746d0ad215
-    m_Address: Material_GoldOre
+    m_Address: Assets/_Data/_Scripts/Items/GoldOre.asset
     m_ReadOnly: 0
     m_SerializedLabels:
     - SO_Item
@@ -32,7 +38,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f5b5cfb6a28b8d146ba29d318897d67b
-    m_Address: Material_CopperOre
+    m_Address: Assets/_Data/_Scripts/Items/CopperOre.asset
     m_ReadOnly: 0
     m_SerializedLabels:
     - SO_Item

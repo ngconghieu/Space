@@ -4,7 +4,7 @@ using UnityEngine;
 public class ItemProfiles : ScriptableObject
 {
     public ItemType ItemType;
-    public ItemName ItemName;
+    public PrefabName ItemName;
     public Sprite ItemIcon;
     public int MaxStack;
 }

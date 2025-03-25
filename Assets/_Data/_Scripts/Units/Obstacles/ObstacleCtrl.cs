@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -8,12 +8,14 @@ public class ObstacleCtrl : GameMonoBehaviour
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] private DespawnObstacle _despawnObstacle;
     [SerializeField] private ObstacleDmgReceiver _obstacleDmgReceiver;
+    [SerializeField] private RandomDownMovement _randomDownMovement;
     [SerializeField] private EffectManager _effectManager;
     [SerializeField] private ItemManager _itemManager;
     [SerializeField] private ObstacleProfiles _obstacleProfiles;
 
     public DespawnObstacle DespawnObstacle => _despawnObstacle;
     public ObstacleDmgReceiver ObstacleDmgReceiver => _obstacleDmgReceiver;
+    public RandomDownMovement RandomDownMovement => _randomDownMovement;
     public EffectManager EffectManager => _effectManager;
     public ItemManager ItemManager => _itemManager;
     public ObstacleProfiles ObstacleProfiles => _obstacleProfiles;
@@ -33,6 +35,7 @@ public class ObstacleCtrl : GameMonoBehaviour
         Addressables.LoadAssetAsync<ObstacleProfiles>(gameObject.name).Completed += handle =>
         {
             _obstacleProfiles = handle.Result;
+            _obstacleProfiles.DropList = _obstacleProfiles.DropList.OrderBy(item => item.DropRate).ToList();
         };
     }
 
@@ -43,6 +46,14 @@ public class ObstacleCtrl : GameMonoBehaviour
         LoadRigibody();
         LoadDespawnObstacle();
         LoadObstacleDmgReceiver();
+        LoadRandomDownMovement();
+    }
+
+    private void LoadRandomDownMovement()
+    {
+        if (_randomDownMovement != null) return;
+        _randomDownMovement = GetComponentInChildren<RandomDownMovement>();
+        Debug.Log("LoadRandomDownMovement", gameObject);
     }
 
     private void LoadObstacleDmgReceiver()

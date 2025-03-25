@@ -35,7 +35,7 @@ public class InventoryManager : Singleton<InventoryManager>
     #endregion
 
     #region AddItem
-    public void AddItem(ItemName itemName, int amount)
+    public void AddItem(PrefabName itemName, int amount)
     {
         ItemProfiles itemProfiles = GetItemProfiles(itemName);
         if (amount <= 0 || itemProfiles == null) return;
@@ -103,7 +103,7 @@ public class InventoryManager : Singleton<InventoryManager>
     #region RemoveItem
     
     #endregion
-    public ItemProfiles GetItemProfiles(ItemName itemName) => 
+    public ItemProfiles GetItemProfiles(PrefabName itemName) => 
         _itemProfiles.Find(item => item.ItemName == itemName);
 }
 

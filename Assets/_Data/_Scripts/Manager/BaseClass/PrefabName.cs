@@ -10,6 +10,7 @@ public enum PrefabName
     Smoke_ObstacleDetroy,
     Impact_Bullet,
     // Item
+    Material_Rock_0,
     Material_CopperOre,
     Material_GoldOre,
 }

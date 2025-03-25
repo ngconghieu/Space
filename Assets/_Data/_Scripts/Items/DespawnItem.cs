@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 [RequireComponent(typeof(CircleCollider2D))]
 public class DespawnItem : Despawner<ItemCtrl>
@@ -28,6 +29,9 @@ public class DespawnItem : Despawner<ItemCtrl>
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!collision.gameObject.TryGetComponent<PlayerDmgReceiver>(out _)) return;
+        PrefabName name = (PrefabName)Enum.Parse(typeof(PrefabName), ctrl.name);
+        InventoryManager.Instance.AddItem(name, 1);
         Despawn();
     }
 }
