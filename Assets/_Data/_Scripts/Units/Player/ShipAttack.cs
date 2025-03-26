@@ -72,7 +72,7 @@ public class ShipAttack : GameMonoBehaviour
 
     private void HandleFire()
     {
-        _isFire = InputManager.Instance.isLeftClick;
+        _isFire = InputManager.Instance.LeftClick;
     }
 
     //public void SetFireRate(float fireRate)

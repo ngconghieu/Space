@@ -7,8 +7,9 @@ public class InventoryManager : Singleton<InventoryManager>
 {
     [SerializeField] private int _maxInventorySize = 10;
     [SerializeField] private AssetLabelReference _itemProfilesLabel;
-    [SerializeField] private List<ItemProfiles> _itemProfiles = new();
+    private Dictionary<PrefabName, ItemProfiles> _itemProfiles = new();
     [SerializeField] private Dictionary<string, Item> _items = new(); // ItemID, Item
+    public event Action OnItemChange;
 
     #region Test
     [SerializeField] private List<Item> _listItems = new();
@@ -29,7 +30,8 @@ public class InventoryManager : Singleton<InventoryManager>
     {
         Addressables.LoadAssetsAsync<ItemProfiles>(_itemProfilesLabel, null).Completed += handle =>
         {
-            _itemProfiles = new(handle.Result);
+            foreach (var itemProfiles in handle.Result)
+                _itemProfiles.Add(itemProfiles.PrefabName, itemProfiles);
         };
     }
     #endregion
@@ -52,7 +54,7 @@ public class InventoryManager : Singleton<InventoryManager>
             Item item = _items[key];
 
             // if item is not same
-            if (!item.ItemProfiles.ItemName.Equals(itemProfiles.ItemName)) continue;
+            if (!item.ItemProfiles.PrefabName.Equals(itemProfiles.PrefabName)) continue;
 
             // if items is full
             if (item.Amount == itemProfiles.MaxStack) continue;
@@ -64,6 +66,7 @@ public class InventoryManager : Singleton<InventoryManager>
         AddItemIntoNewSpaces(items, itemProfiles, ref currentAmount, ref cntSpace);
         if (currentAmount > 0) return;
         _items = items;
+        OnItemChangeInvoke();
         Test();
     }
 
@@ -101,10 +104,16 @@ public class InventoryManager : Singleton<InventoryManager>
     #endregion
 
     #region RemoveItem
-    
+    public void RemoveItem(PrefabName prefabName, int amount)
+    {
+
+    }
     #endregion
-    public ItemProfiles GetItemProfiles(PrefabName itemName) => 
-        _itemProfiles.Find(item => item.ItemName == itemName);
+
+    public ItemProfiles GetItemProfiles(PrefabName prefabName) =>
+        _itemProfiles.TryGetValue(prefabName, out var value)? value : null;
+
+    public void OnItemChangeInvoke() => OnItemChange?.Invoke();
 }
 
 [Serializable]

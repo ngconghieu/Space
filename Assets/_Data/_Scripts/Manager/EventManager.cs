@@ -39,5 +39,5 @@ public class EventManager
 
  public enum GameEvent
 {
-    Despawn,
+    Inventory
 }

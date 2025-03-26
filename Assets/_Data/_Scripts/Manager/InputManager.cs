@@ -6,14 +6,19 @@ public class InputManager : Singleton<InputManager>
 {
     [SerializeField] private PlayerInput _playerInput;
     
-    [Header("Input")]
+    [Header("InputPlayer")]
     [SerializeField] private bool _leftClick;
     [SerializeField] private bool _rightClick;
     [SerializeField] private Vector2 _look = Vector2.zero;
 
-    public bool isLeftClick => _leftClick;
-    public bool isRightClick => _rightClick;
+    public bool LeftClick => _leftClick;
+    public bool RightClick => _rightClick;
     public Vector2 Look => _look;
+
+    [Header("InputUI")]
+    [SerializeField] private bool _openInventory;
+
+    public bool OpenInventory => _openInventory;
 
     #region LoadComponents
     protected override void LoadComponents()
@@ -47,5 +52,18 @@ public class InputManager : Singleton<InputManager>
     {
         Vector2 test = context.ReadValue<Vector2>();
         _look = Camera.main.ScreenToWorldPoint(test);
+    }
+
+    public void OnOpenInventory(InputAction.CallbackContext context)
+    {
+        _look = Vector2.zero;
+        _openInventory = true;
+        _playerInput.SwitchCurrentActionMap("UI");
+    }
+
+    public void OnCloseInventory(InputAction.CallbackContext context)
+    {
+        _openInventory = false;
+        _playerInput.SwitchCurrentActionMap("Player");
     }
 }
