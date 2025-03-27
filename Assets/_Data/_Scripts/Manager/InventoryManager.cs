@@ -7,17 +7,9 @@ public class InventoryManager : Singleton<InventoryManager>
 {
     [SerializeField] private int _maxInventorySize = 10;
     [SerializeField] private AssetLabelReference _itemProfilesLabel;
-    private Dictionary<PrefabName, ItemProfiles> _itemProfiles = new();
-    [SerializeField] private Dictionary<string, Item> _items = new(); // ItemID, Item
+    private readonly Dictionary<PrefabName, ItemProfiles> _itemProfiles = new();
+    [SerializeField] private List<Item> _items = new(); // ItemID, Item
     public event Action OnItemChange;
-
-    #region Test
-    [SerializeField] private List<Item> _listItems = new();
-    private void Test()
-    {
-        _listItems = new(_items.Values);
-    }
-    #endregion
 
     #region LoadComponents
     protected override void LoadComponents()
@@ -42,35 +34,33 @@ public class InventoryManager : Singleton<InventoryManager>
         ItemProfiles itemProfiles = GetItemProfiles(itemName);
         if (amount <= 0 || itemProfiles == null) return;
 
-        Dictionary<string, Item> items = new(_items); // clone _items
+        List<Item> items = new(_items); // clone _items
         int currentAmount = amount;
         int cntSpace = 0;
 
-        foreach (string key in _items.Keys)
+        for (int i = 0; i < items.Count; i++)
         {
             if (cntSpace >= _maxInventorySize) break; // if inventory is full
             ++cntSpace;
 
-            Item item = _items[key];
-
             // if item is not same
-            if (!item.ItemProfiles.PrefabName.Equals(itemProfiles.PrefabName)) continue;
+            if (!items[i].ItemProfiles.PrefabName.Equals(itemProfiles.PrefabName)) continue;
 
             // if items is full
-            if (item.Amount == itemProfiles.MaxStack) continue;
+            if (items[i].Amount == itemProfiles.MaxStack) continue;
 
-            StackItem(ref item, ref currentAmount);
-            items[key] = item;
+            items[i] = StackItem(items[i], ref currentAmount);
         }
+
+
 
         AddItemIntoNewSpaces(items, itemProfiles, ref currentAmount, ref cntSpace);
         if (currentAmount > 0) return;
         _items = items;
         OnItemChangeInvoke();
-        Test();
     }
 
-    private void StackItem(ref Item item, ref int currentAmount)
+    private Item StackItem(Item item, ref int currentAmount)
     {
         int amount = item.ItemProfiles.MaxStack - item.Amount;
         if (currentAmount >= amount)
@@ -83,9 +73,10 @@ public class InventoryManager : Singleton<InventoryManager>
             item.Amount += currentAmount;
             currentAmount = 0;
         }
+        return item;
     }
 
-    private void AddItemIntoNewSpaces(Dictionary<string, Item> items, ItemProfiles itemProfiles, ref int currentAmount, ref int cntSpace)
+    private void AddItemIntoNewSpaces(List<Item> items, ItemProfiles itemProfiles, ref int currentAmount, ref int cntSpace)
     {
         while (currentAmount > 0 && ++cntSpace <= _maxInventorySize)
         {
@@ -93,7 +84,7 @@ public class InventoryManager : Singleton<InventoryManager>
             currentAmount -= amount;
 
             string itemID = Guid.NewGuid().ToString();
-            items.Add(itemID, new()
+            items.Add(new()
             {
                 ItemID = itemID,
                 ItemProfiles = itemProfiles,
@@ -106,18 +97,41 @@ public class InventoryManager : Singleton<InventoryManager>
     #region RemoveItem
     public void RemoveItem(PrefabName prefabName, int amount)
     {
+        if (_items.Count == 0 || amount <= 0) return;
+        ItemProfiles itemProfiles = GetItemProfiles(prefabName);
 
+        if (!EnoughAmountToRemove(itemProfiles, amount)) return;
+        for (int i = _items.Count - 1; i > 0; i--)
+        {
+            if(!_items[i].ItemProfiles.PrefabName.Equals(itemProfiles.PrefabName)) continue;
+            if (_items[i].Amount > amount)
+            {
+                _items[i].Amount -= amount;
+                break;
+            }
+        }
+    }
+
+    private bool EnoughAmountToRemove(ItemProfiles itemProfiles, int amount)
+    {
+        int totalAmount = 0;
+        foreach (var item in _items)
+        {
+            if (item.ItemProfiles.PrefabName.Equals(itemProfiles.PrefabName))
+                totalAmount += item.Amount;
+        }
+        return totalAmount >= amount;
     }
     #endregion
 
     public ItemProfiles GetItemProfiles(PrefabName prefabName) =>
-        _itemProfiles.TryGetValue(prefabName, out var value)? value : null;
+        _itemProfiles.TryGetValue(prefabName, out var value) ? value : null;
 
     public void OnItemChangeInvoke() => OnItemChange?.Invoke();
 }
 
 [Serializable]
-public struct Item
+public class Item
 {
     public string ItemID;
     public ItemProfiles ItemProfiles;
