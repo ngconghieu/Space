@@ -68,7 +68,7 @@ public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
         _objectPool.AddToPool(prefab);
     }
 
-    public T GetPrefab(PrefabName name) =>
+    public T GetPrefab(Const name) =>
         _prefabs.ContainsKey(name.ToString()) ? _prefabs[name.ToString()] : null;
 
     protected abstract void SubscribeEvent(T prefab);

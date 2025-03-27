@@ -4,36 +4,18 @@ using UnityEngine.InputSystem;
 
 public class InputManager : Singleton<InputManager>
 {
-    [SerializeField] private PlayerInput _playerInput;
-    
     [Header("InputPlayer")]
     [SerializeField] private bool _leftClick;
     [SerializeField] private bool _rightClick;
     [SerializeField] private Vector2 _look = Vector2.zero;
+    [SerializeField] private bool _inventoryToggle;
 
     public bool LeftClick => _leftClick;
     public bool RightClick => _rightClick;
     public Vector2 Look => _look;
+    public bool InventoryToggle => _inventoryToggle;
 
-    [Header("InputUI")]
-    [SerializeField] private bool _openInventory;
-
-    public bool OpenInventory => _openInventory;
-
-    #region LoadComponents
-    protected override void LoadComponents()
-    {
-        base.LoadComponents();
-        LoadPlayerInput();
-    }
-
-    private void LoadPlayerInput()
-    {
-        if (_playerInput != null) return;
-        _playerInput = GetComponent<PlayerInput>();
-        Debug.Log("LoadPlayerInput", gameObject);
-    }
-    #endregion
+    public event Action OnInventoryToggle;
 
     public void OnLeftClick(InputAction.CallbackContext context)
     {
@@ -56,14 +38,14 @@ public class InputManager : Singleton<InputManager>
 
     public void OnOpenInventory(InputAction.CallbackContext context)
     {
+        _inventoryToggle = true;
         _look = Vector2.zero;
-        _openInventory = true;
-        _playerInput.SwitchCurrentActionMap("UI");
+        OnInventoryToggle?.Invoke();
     }
 
     public void OnCloseInventory(InputAction.CallbackContext context)
     {
-        _openInventory = false;
-        _playerInput.SwitchCurrentActionMap("Player");
+        _inventoryToggle = false;
+        OnInventoryToggle?.Invoke();
     }
 }

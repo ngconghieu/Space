@@ -30,7 +30,7 @@ public class DespawnItem : Despawner<ItemCtrl>
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision.gameObject.TryGetComponent<PlayerDmgReceiver>(out _)) return;
-        PrefabName name = (PrefabName)Enum.Parse(typeof(PrefabName), ctrl.name);
+        Const name = (Const)Enum.Parse(typeof(Const), ctrl.name);
         InventoryManager.Instance.AddItem(name, 1);
         Despawn();
     }

@@ -32,7 +32,7 @@ public class ObstacleManager : Spawner<ObstacleCtrl>
             Vector3 camPos = CameraManager.Instance.Camera.transform.position;
             float RandomX = UnityEngine.Random.Range(camPos.x - 9, camPos.x + 9);
             Vector2 spawnPos = new(RandomX, camPos.y + 13);
-            ObstacleCtrl obstacle = GetPrefab(PrefabName.Obstacle_0);
+            ObstacleCtrl obstacle = GetPrefab(Const.Obstacle_0);
             Spawn(obstacle, spawnPos, Quaternion.identity);
             yield return _wait;
         }
@@ -47,6 +47,6 @@ public class ObstacleManager : Spawner<ObstacleCtrl>
 [Serializable]
 public struct ObstacleDropItem
 {
-    public PrefabName PrefabName;
+    public Const PrefabName;
     public float DropRate;
 }

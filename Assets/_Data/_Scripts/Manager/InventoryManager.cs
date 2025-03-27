@@ -7,7 +7,7 @@ public class InventoryManager : Singleton<InventoryManager>
 {
     [SerializeField] private int _maxInventorySize = 10;
     [SerializeField] private AssetLabelReference _itemProfilesLabel;
-    private readonly Dictionary<PrefabName, ItemProfiles> _itemProfiles = new();
+    private readonly Dictionary<Const, ItemProfiles> _itemProfiles = new();
     [SerializeField] private List<Item> _items = new(); // ItemID, Item
     public event Action OnItemChange;
 
@@ -29,7 +29,7 @@ public class InventoryManager : Singleton<InventoryManager>
     #endregion
 
     #region AddItem
-    public void AddItem(PrefabName itemName, int amount)
+    public void AddItem(Const itemName, int amount)
     {
         ItemProfiles itemProfiles = GetItemProfiles(itemName);
         if (amount <= 0 || itemProfiles == null) return;
@@ -95,7 +95,7 @@ public class InventoryManager : Singleton<InventoryManager>
     #endregion
 
     #region RemoveItem
-    public void RemoveItem(PrefabName prefabName, int amount)
+    public void RemoveItem(Const prefabName, int amount)
     {
         if (_items.Count == 0 || amount <= 0) return;
         ItemProfiles itemProfiles = GetItemProfiles(prefabName);
@@ -128,10 +128,10 @@ public class InventoryManager : Singleton<InventoryManager>
     }
     #endregion
 
-    public ItemProfiles GetItemProfiles(PrefabName prefabName) =>
+    public ItemProfiles GetItemProfiles(Const prefabName) =>
         _itemProfiles.TryGetValue(prefabName, out var value) ? value : null;
 
-    public List<Item> GetItems() => _items;
+    public List<Item> GetItemList() => _items;
 
     public void OnItemChangeInvoke() => OnItemChange?.Invoke();
 }

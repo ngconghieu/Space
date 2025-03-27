@@ -14,7 +14,7 @@ public class BulletDmgSender : DmgSender
 
     private void Start()
     {
-        _effect = _bulletCtrl.EffectManager.GetPrefab(PrefabName.Impact_Bullet);
+        _effect = _bulletCtrl.EffectManager.GetPrefab(Const.Impact_Bullet);
     }
 
     protected override void OnTriggerEnter2D(Collider2D collision)

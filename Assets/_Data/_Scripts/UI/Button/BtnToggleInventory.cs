@@ -13,7 +13,7 @@ public class BtnToggleInventory : BtnAbstract
     private void LoadInventoryUI()
     {
         if (_inventoryUI != null) return;
-        _inventoryUI = transform.parent.GetComponentInChildren<InventoryUI>();
+        _inventoryUI = transform.parent.GetComponentInParent<InventoryUI>();
         Debug.Log("LoadInventoryUI", gameObject);
     }
 

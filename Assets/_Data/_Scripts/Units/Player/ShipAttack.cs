@@ -62,7 +62,7 @@ public class ShipAttack : GameMonoBehaviour
     private void Fire()
     {
         if (_bulletCtrl == null)
-            _bulletCtrl = _playerShipCtrl.BulletManager.GetPrefab(PrefabName.BulletDefault);
+            _bulletCtrl = _playerShipCtrl.BulletManager.GetPrefab(Const.BulletDefault);
         _playerShipCtrl.BulletManager.Spawn(
             _bulletCtrl,
             _firePoint.position,
