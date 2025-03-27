@@ -99,15 +99,19 @@ public class InventoryManager : Singleton<InventoryManager>
     {
         if (_items.Count == 0 || amount <= 0) return;
         ItemProfiles itemProfiles = GetItemProfiles(prefabName);
-
         if (!EnoughAmountToRemove(itemProfiles, amount)) return;
-        for (int i = _items.Count - 1; i > 0; i--)
+        for (int i = _items.Count - 1; i >= 0; i--)
         {
-            if(!_items[i].ItemProfiles.PrefabName.Equals(itemProfiles.PrefabName)) continue;
-            if (_items[i].Amount > amount)
+            if(!_items[i].ItemProfiles.Equals(itemProfiles)) continue;
+            if (_items[i].Amount >= amount)
             {
                 _items[i].Amount -= amount;
                 break;
+            }
+            else
+            {
+                amount -= _items[i].Amount;
+                _items.RemoveAt(i);
             }
         }
     }
@@ -126,6 +130,8 @@ public class InventoryManager : Singleton<InventoryManager>
 
     public ItemProfiles GetItemProfiles(PrefabName prefabName) =>
         _itemProfiles.TryGetValue(prefabName, out var value) ? value : null;
+
+    public List<Item> GetItems() => _items;
 
     public void OnItemChangeInvoke() => OnItemChange?.Invoke();
 }
