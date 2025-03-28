@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Material_GoldOre
   m_EditorClassIdentifier: 
   ItemType: 3
-  PrefabName: 7
+  PrefabName: 9
   ItemIcon: {fileID: 21300000, guid: 1894a7f3789d89943b09a4c279ba6f78, type: 3}
   MaxStack: 24

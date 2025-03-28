@@ -52,8 +52,6 @@ public class InventoryManager : Singleton<InventoryManager>
             items[i] = StackItem(items[i], ref currentAmount);
         }
 
-
-
         AddItemIntoNewSpaces(items, itemProfiles, ref currentAmount, ref cntSpace);
         if (currentAmount > 0) return;
         _items = items;
@@ -102,7 +100,7 @@ public class InventoryManager : Singleton<InventoryManager>
         if (!EnoughAmountToRemove(itemProfiles, amount)) return;
         for (int i = _items.Count - 1; i >= 0; i--)
         {
-            if(!_items[i].ItemProfiles.Equals(itemProfiles)) continue;
+            if (!_items[i].ItemProfiles.Equals(itemProfiles)) continue;
             if (_items[i].Amount >= amount)
             {
                 _items[i].Amount -= amount;
@@ -111,9 +109,11 @@ public class InventoryManager : Singleton<InventoryManager>
             else
             {
                 amount -= _items[i].Amount;
-                _items.RemoveAt(i);
+                _items[i].Amount = 0;
             }
         }
+        OnItemChange?.Invoke();
+        _items.RemoveAll(item => item.Amount == 0);
     }
 
     private bool EnoughAmountToRemove(ItemProfiles itemProfiles, int amount)

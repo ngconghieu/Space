@@ -5,16 +5,16 @@ public class HandleInput : GameMonoBehaviour
 {
     [SerializeField] private PlayerInput _playerInput;
 
+    private void Start()
+    {
+        InputManager.Instance.OnInventoryToggle += SwitchActionMap;
+    }
+
     #region LoadComponents
     protected override void LoadComponents()
     {
         base.LoadComponents();
         LoadPlayerInput();
-    }
-
-    private void Start()
-    {
-        InputManager.Instance.OnInventoryToggle += SwitchActionMap;
     }
 
     private void LoadPlayerInput()

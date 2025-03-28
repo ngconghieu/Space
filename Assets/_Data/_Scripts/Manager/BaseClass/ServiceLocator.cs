@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class ServiceLocator
 {
@@ -15,7 +16,7 @@ public class ServiceLocator
         var type = typeof(T);
         if (_services.ContainsKey(type))
             return (T)_services[type];
-        UnityEngine.Debug.LogError($"Service of type {type} not found");
+        Debug.LogError($"Service of type {type} not found");
         return default;
     }
 }

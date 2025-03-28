@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +9,10 @@ public class InputManager : Singleton<InputManager>
     [SerializeField] private bool _rightClick;
     [SerializeField] private Vector2 _look = Vector2.zero;
     [SerializeField] private bool _inventoryToggle;
+    [SerializeField] private PlayerInput _playerInput;
+
+    private InputActionMap _playerMap;
+    private InputActionMap _uiMap;
 
     public bool LeftClick => _leftClick;
     public bool RightClick => _rightClick;
@@ -16,6 +20,22 @@ public class InputManager : Singleton<InputManager>
     public bool InventoryToggle => _inventoryToggle;
 
     public event Action OnInventoryToggle;
+
+    #region LoadComponents
+    protected override void LoadComponents()
+    {
+        base.LoadComponents();
+        LoadPlayerInput();
+    }
+
+    private void LoadPlayerInput()
+    {
+        if (_playerInput != null) return;
+        _playerInput = GetComponent<PlayerInput>();
+        Debug.Log("LoadPlayerInput", gameObject);
+    }
+    #endregion
+
 
     public void OnLeftClick(InputAction.CallbackContext context)
     {
@@ -36,16 +56,36 @@ public class InputManager : Singleton<InputManager>
         _look = Camera.main.ScreenToWorldPoint(test);
     }
 
-    public void OnOpenInventory(InputAction.CallbackContext context)
+
+    public void OnToggleInventory(InputAction.CallbackContext context)
     {
-        _inventoryToggle = true;
-        _look = Vector2.zero;
-        OnInventoryToggle?.Invoke();
+        if (context.performed) 
+        {
+            if (!_inventoryToggle)
+            {
+                _inventoryToggle = true;
+                Time.timeScale = 0;
+                Debug.Log("Open Inventory");
+                _playerMap.Disable();
+                _uiMap.Enable();
+            }
+            else
+            {
+                _inventoryToggle = false;
+                Time.timeScale = 1;
+                Debug.Log("Close Inventory");
+                _uiMap.Disable();
+                _playerMap.Enable();
+            }
+            OnInventoryToggle?.Invoke();
+        }
     }
 
-    public void OnCloseInventory(InputAction.CallbackContext context)
+    private void Start()
     {
-        _inventoryToggle = false;
-        OnInventoryToggle?.Invoke();
+        _playerMap = _playerInput.actions.FindActionMap(Const.Player.ToString());
+        _uiMap = _playerInput.actions.FindActionMap(Const.UI.ToString());
+        _playerMap.Disable();
+        _uiMap.Enable();
     }
 }
