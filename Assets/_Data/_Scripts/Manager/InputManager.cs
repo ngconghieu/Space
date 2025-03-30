@@ -82,7 +82,7 @@ public class InputManager : Singleton<InputManager>
     {
         _playerMap = _playerInput.actions.FindActionMap(Const.Player.ToString());
         _uiMap = _playerInput.actions.FindActionMap(Const.UI.ToString());
-        _playerMap.Enable();
-        _uiMap.Disable();
+        _playerMap.Disable();
+        _uiMap.Enable();
     }
 }
