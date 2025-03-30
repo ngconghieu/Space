@@ -5,11 +5,10 @@ using UnityEngine.AddressableAssets;
 
 public class InventoryManager : Singleton<InventoryManager>
 {
-    [SerializeField] private int _maxInventorySize = 10;
+    [SerializeField] private int _inventorySize = 7;
     [SerializeField] private AssetLabelReference _itemProfilesLabel;
     private readonly Dictionary<Const, ItemProfiles> _itemProfiles = new();
     [SerializeField] private List<Item> _items = new(); // ItemID, Item
-    public event Action OnItemChange;
 
     #region LoadComponents
     protected override void LoadComponents()
@@ -29,10 +28,10 @@ public class InventoryManager : Singleton<InventoryManager>
     #endregion
 
     #region AddItem
-    public void AddItem(Const itemName, int amount)
+    public bool AddItem(Const itemName, int amount)
     {
         ItemProfiles itemProfiles = GetItemProfiles(itemName);
-        if (amount <= 0 || itemProfiles == null) return;
+        if (amount <= 0 || itemProfiles == null) return false;
 
         List<Item> items = new(_items); // clone _items
         int currentAmount = amount;
@@ -40,7 +39,7 @@ public class InventoryManager : Singleton<InventoryManager>
 
         for (int i = 0; i < items.Count; i++)
         {
-            if (cntSpace >= _maxInventorySize) break; // if inventory is full
+            if (cntSpace >= _inventorySize) break; // if inventory is full
             ++cntSpace;
 
             // if item is not same
@@ -53,9 +52,9 @@ public class InventoryManager : Singleton<InventoryManager>
         }
 
         AddItemIntoNewSpaces(items, itemProfiles, ref currentAmount, ref cntSpace);
-        if (currentAmount > 0) return;
+        if (currentAmount > 0) return false;
         _items = items;
-        OnItemChangeInvoke();
+        return true;
     }
 
     private Item StackItem(Item item, ref int currentAmount)
@@ -76,7 +75,7 @@ public class InventoryManager : Singleton<InventoryManager>
 
     private void AddItemIntoNewSpaces(List<Item> items, ItemProfiles itemProfiles, ref int currentAmount, ref int cntSpace)
     {
-        while (currentAmount > 0 && ++cntSpace <= _maxInventorySize)
+        while (currentAmount > 0 && ++cntSpace <= _inventorySize)
         {
             int amount = Math.Min(itemProfiles.MaxStack, currentAmount);
             currentAmount -= amount;
@@ -112,8 +111,6 @@ public class InventoryManager : Singleton<InventoryManager>
                 _items[i].Amount = 0;
             }
         }
-        OnItemChange?.Invoke();
-        _items.RemoveAll(item => item.Amount == 0);
     }
 
     private bool EnoughAmountToRemove(ItemProfiles itemProfiles, int amount)
@@ -128,12 +125,16 @@ public class InventoryManager : Singleton<InventoryManager>
     }
     #endregion
 
+    public void RemoveEmptyItems() =>
+        _items.RemoveAll(item => item.Amount == 0);
+
+    public int InventorySize() => _inventorySize;
+
     public ItemProfiles GetItemProfiles(Const prefabName) =>
         _itemProfiles.TryGetValue(prefabName, out var value) ? value : null;
 
     public List<Item> GetItemList() => _items;
 
-    public void OnItemChangeInvoke() => OnItemChange?.Invoke();
 }
 
 [Serializable]

@@ -51,7 +51,7 @@ public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
         }
         newPrefab = Spawn(prefab);
         newPrefab.transform.SetPositionAndRotation(position, rotation);
-        SubscribeEvent(newPrefab);
+        Initialize(newPrefab);
         newPrefab.name = prefab.name;
         return newPrefab;
     }
@@ -63,14 +63,15 @@ public abstract class Spawner<T> : GameMonoBehaviour where T : GameMonoBehaviour
         return newPrefab;
     }
 
-    public virtual void Despawn(T prefab)
-    {
+    public virtual void Despawn(T prefab) =>
         _objectPool.AddToPool(prefab);
-    }
 
     public T GetPrefab(Const name) =>
         _prefabs.ContainsKey(name.ToString()) ? _prefabs[name.ToString()] : null;
 
-    protected abstract void SubscribeEvent(T prefab);
+    // do sth with newPrefab when the newPrefab is spawned
+    protected abstract void Initialize(T prefab);
+
+    // Register services for the inherited classes (Services Locator)
     protected abstract void RegisterServices();
 }

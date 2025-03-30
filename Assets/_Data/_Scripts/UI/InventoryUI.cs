@@ -3,17 +3,25 @@ using UnityEngine;
 
 public class InventoryUI : GameMonoBehaviour
 {
+    [SerializeField] private ItemUI _btnDefault;
     [SerializeField] private Transform _scrollView;
-    [SerializeField] private BtnItem _btnDefault;
+    [SerializeField] private Transform _holder;
     [SerializeField] private bool _showInventory = true;
-    private readonly Dictionary<string, BtnItem> _btnItems = new();
+    [SerializeField] private List<ItemUI> _btnItemList = new();
+
+    public Transform Holder => _holder;
 
     private void Start()
     {
-        _btnDefault.gameObject.SetActive(false);
+        Initialize();
+    }
+
+    private void Initialize()
+    {
+        _btnDefault.SetDefaultBtn();
         ToggleInventory();
-        InventoryManager.Instance.OnItemChange += OnItemChange;
-        InputManager.Instance.OnInventoryToggle += ToggleInventory;
+        LoadItemSlots();
+        InputManager.Instance.HandleInventoryToggle += ToggleInventory;
     }
 
     #region LoadComponents
@@ -22,6 +30,7 @@ public class InventoryUI : GameMonoBehaviour
         base.LoadComponents();
         LoadScrollView();
         LoadBtnDefault();
+        _holder = _scrollView.Find("Holder");
     }
 
     private void LoadScrollView()
@@ -34,46 +43,57 @@ public class InventoryUI : GameMonoBehaviour
     private void LoadBtnDefault()
     {
         if (_btnDefault != null) return;
-        _btnDefault = GetComponentInChildren<BtnItem>();
+        _btnDefault = GetComponentInChildren<ItemUI>();
+        _btnItemList.Add(_btnDefault);
         Debug.Log("LoadBtnDefault", gameObject);
+    }
+
+    private void LoadItemSlots()
+    {
+        int inventorySize = InventoryManager.Instance.InventorySize();
+
+        for (int i = _btnItemList.Count; i < inventorySize; i++)
+        {
+            ItemUI newBtnItem = Instantiate(_btnDefault, _btnDefault.transform.parent);
+            newBtnItem.name = $"Item_{i}";
+            newBtnItem.SetIndex(i);
+            _btnItemList.Add(newBtnItem);
+        }
     }
     #endregion
 
     public void ToggleInventory()
     {
         _showInventory = !_showInventory;
-        if (_showInventory) OnItemChange();
+        if (_showInventory)
+            HandleItemChange();
         _scrollView.gameObject.SetActive(_showInventory);
     }
 
-    public void OnItemChange()
+    public void HandleItemChange()
     {
-        List<Item> items = new(InventoryManager.Instance.GetItemList());
+        List<Item> items = InventoryManager.Instance.GetItemList();
         foreach (var item in items)
         {
             // update existing btnItem
-            if (_btnItems.ContainsKey(item.ItemID))
+            ItemUI btnItem = _btnItemList.Find(_item => _item.ItemId.Equals(item.ItemID));
+            if (btnItem != null)
             {
                 if (item.Amount == 0)
-                {
-                    GameObject.Destroy(_btnItems[item.ItemID].gameObject);
-                    _btnItems.Remove(item.ItemID);
-                    continue;
-                }
-                _btnItems[item.ItemID].SetAmount(item.Amount);
-                continue;
+                    btnItem.SetDefaultBtn();
+                else
+                    btnItem.SetAmount(item.Amount);
             }
 
             // add new btnItem
             else
             {
-                BtnItem newBtnItem = Instantiate(_btnDefault, _btnDefault.transform.parent);
-                newBtnItem.SetAmount(item.Amount);
-                newBtnItem.SetImage(item.ItemProfiles.ItemIcon);
-                newBtnItem.SetItemId(item.ItemID);
-                newBtnItem.gameObject.SetActive(true);
-                _btnItems.Add(item.ItemID, newBtnItem);
+                btnItem = _btnItemList.Find(_item => _item.IsEmptyBtn());
+                btnItem.SetItemId(item.ItemID);
+                btnItem.SetImage(item.ItemProfiles.ItemIcon);
+                btnItem.SetAmount(item.Amount);
             }
         }
+        InventoryManager.Instance.RemoveEmptyItems();
     }
 }

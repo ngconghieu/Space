@@ -5,7 +5,7 @@ public class BulletManager : Spawner<BulletCtrl>
         ServiceLocator.Register<BulletManager>(this);
     }
 
-    protected override void SubscribeEvent(BulletCtrl prefab)
+    protected override void Initialize(BulletCtrl prefab)
     {
         prefab.DespawnBullet.OnDespawn += Despawn;
     }

@@ -19,7 +19,7 @@ public class InputManager : Singleton<InputManager>
     public Vector2 Look => _look;
     public bool InventoryToggle => _inventoryToggle;
 
-    public event Action OnInventoryToggle;
+    public event Action HandleInventoryToggle;
 
     #region LoadComponents
     protected override void LoadComponents()
@@ -52,32 +52,29 @@ public class InputManager : Singleton<InputManager>
 
     public void OnLook(InputAction.CallbackContext context)
     {
-        Vector2 test = context.ReadValue<Vector2>();
-        _look = Camera.main.ScreenToWorldPoint(test);
+        Vector2 data = context.ReadValue<Vector2>();
+        _look = Camera.main.ScreenToWorldPoint(data);
     }
-
 
     public void OnToggleInventory(InputAction.CallbackContext context)
     {
-        if (context.performed) 
+        if (context.performed)
         {
             if (!_inventoryToggle)
             {
                 _inventoryToggle = true;
                 Time.timeScale = 0;
                 Debug.Log("Open Inventory");
-                _playerMap.Disable();
-                _uiMap.Enable();
+                _playerInput.SwitchCurrentActionMap(Const.UI.ToString());
             }
             else
             {
                 _inventoryToggle = false;
                 Time.timeScale = 1;
                 Debug.Log("Close Inventory");
-                _uiMap.Disable();
-                _playerMap.Enable();
+                _playerInput.SwitchCurrentActionMap(Const.Player.ToString());
             }
-            OnInventoryToggle?.Invoke();
+            HandleInventoryToggle?.Invoke();
         }
     }
 
@@ -85,7 +82,7 @@ public class InputManager : Singleton<InputManager>
     {
         _playerMap = _playerInput.actions.FindActionMap(Const.Player.ToString());
         _uiMap = _playerInput.actions.FindActionMap(Const.UI.ToString());
-        _playerMap.Disable();
-        _uiMap.Enable();
+        _playerMap.Enable();
+        _uiMap.Disable();
     }
 }

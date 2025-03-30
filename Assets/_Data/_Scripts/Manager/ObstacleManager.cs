@@ -8,7 +8,7 @@ public class ObstacleManager : Spawner<ObstacleCtrl>
     [SerializeField] private int _maxSpawnObject = 100;
     private WaitForSeconds _wait;
 
-    protected override void SubscribeEvent(ObstacleCtrl prefab)
+    protected override void Initialize(ObstacleCtrl prefab)
     {
         prefab.DespawnObstacle.OnDespawn += Despawn;
     }

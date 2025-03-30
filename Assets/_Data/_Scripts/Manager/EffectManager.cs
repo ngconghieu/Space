@@ -5,7 +5,7 @@ public class EffectManager : Spawner<EffectCtrl>
         ServiceLocator.Register<EffectManager>(this);
     }
 
-    protected override void SubscribeEvent(EffectCtrl prefab)
+    protected override void Initialize(EffectCtrl prefab)
     {
         prefab.DespawnEffect.OnDespawn += Despawn;
     }

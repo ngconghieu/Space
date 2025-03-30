@@ -31,7 +31,7 @@ public class DespawnItem : Despawner<ItemCtrl>
     {
         if (!collision.gameObject.TryGetComponent<PlayerDmgReceiver>(out _)) return;
         Const name = (Const)Enum.Parse(typeof(Const), ctrl.name);
-        InventoryManager.Instance.AddItem(name, 1);
+        if (!InventoryManager.Instance.AddItem(name, 1)) return;
         Despawn();
     }
 }
