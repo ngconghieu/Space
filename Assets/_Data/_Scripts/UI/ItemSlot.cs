@@ -26,7 +26,7 @@ public class ItemSlot : GameMonoBehaviour
     public void SetIndex(int index) =>
         _index = index;
 
-    public void SetItemUI(ItemUI itemUI) =>
+    public ItemUI SetItemUI(ItemUI itemUI) =>
         _itemUI = itemUI;
 
 }

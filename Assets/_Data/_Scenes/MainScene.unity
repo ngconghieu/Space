@@ -610,6 +610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7913ce15612797346a7d532729e6810b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _itemSlot: {fileID: 0}
 --- !u!1 &503876420
 GameObject:
   m_ObjectHideFlags: 0
@@ -1239,7 +1240,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1045986133}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -1681,6 +1682,7 @@ MonoBehaviour:
   _rightClick: 0
   _look: {x: 0, y: 0}
   _inventoryToggle: 0
+  _mousePosition: {x: 0, y: 0}
   _playerInput: {fileID: 1550495540}
 --- !u!4 &1550495539
 Transform:
@@ -1831,7 +1833,19 @@ MonoBehaviour:
     m_ActionId: 40a68ab7-e59d-4298-aea1-926318130d93
     m_ActionName: 'UI/Click[/Mouse/leftButton]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1550495538}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnMousePosition
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 5272be63-15cc-4eea-ab35-93b7e9eb1c44
     m_ActionName: 'UI/Point[/Mouse/position]'
   - m_PersistentCalls:
@@ -3150,7 +3164,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2114730311}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 

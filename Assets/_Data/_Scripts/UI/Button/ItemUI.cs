@@ -15,6 +15,7 @@ public class ItemUI : GameMonoBehaviour
         base.LoadComponents();
         LoadAmount();
         LoadImage();
+        SetDefault();
     }
 
     private void LoadImage()
@@ -38,13 +39,13 @@ public class ItemUI : GameMonoBehaviour
 
     public void SetAmount(int value)
     {
-        _amount.enabled = value >= 2;
+        _amount.gameObject.SetActive(value >= 2);
         _amount.text = value.ToString();
     }
 
     public void SetImage(Sprite sprite)
     {
-        _image.enabled = sprite != null;
+        _image.gameObject.SetActive(sprite != null);
         _image.sprite = sprite;
     }
 
@@ -58,6 +59,6 @@ public class ItemUI : GameMonoBehaviour
         SetAmount(0);
     }
 
-    public bool IsEmptyBtn() => !_image.enabled;
+    public bool CheckEmptyItem() => _image.sprite == null;
 
 }

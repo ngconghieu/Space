@@ -9,6 +9,7 @@ public class InputManager : Singleton<InputManager>
     [SerializeField] private bool _rightClick;
     [SerializeField] private Vector2 _look = Vector2.zero;
     [SerializeField] private bool _inventoryToggle;
+    [SerializeField] private Vector2 _mousePosition;
     [SerializeField] private PlayerInput _playerInput;
 
     private InputActionMap _playerMap;
@@ -18,6 +19,7 @@ public class InputManager : Singleton<InputManager>
     public bool RightClick => _rightClick;
     public Vector2 Look => _look;
     public bool InventoryToggle => _inventoryToggle;
+    public Vector2 MousePosition => _mousePosition;
 
     public event Action HandleInventoryToggle;
 
@@ -56,6 +58,10 @@ public class InputManager : Singleton<InputManager>
         _look = Camera.main.ScreenToWorldPoint(data);
     }
 
+    public void OnMousePosition(InputAction.CallbackContext context)
+    {
+        _mousePosition = context.ReadValue<Vector2>();
+    }
     public void OnToggleInventory(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -64,14 +70,14 @@ public class InputManager : Singleton<InputManager>
             {
                 _inventoryToggle = true;
                 Time.timeScale = 0;
-                Debug.Log("Open Inventory");
+                //Debug.Log("Open Inventory");
                 _playerInput.SwitchCurrentActionMap(Const.UI.ToString());
             }
             else
             {
                 _inventoryToggle = false;
                 Time.timeScale = 1;
-                Debug.Log("Close Inventory");
+                //Debug.Log("Close Inventory");
                 _playerInput.SwitchCurrentActionMap(Const.Player.ToString());
             }
             HandleInventoryToggle?.Invoke();

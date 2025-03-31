@@ -96,6 +96,7 @@ public class InventoryUI : Singleton<InventoryUI>
         {
             if (FindItemSlotById(item.ItemID) != null) continue;
             ItemSlot emptySlot = FindEmptyItemSlot();
+            Debug.Log(emptySlot + " - " + item.ItemID);
             if (emptySlot == null) continue;
 
             ItemUI itemUI = emptySlot.ItemUI;
@@ -135,7 +136,7 @@ public class InventoryUI : Singleton<InventoryUI>
     {
         foreach (var slot in _itemSlotList.Values)
         {
-            if (slot.ItemUI.IsEmptyBtn())
+            if (slot.ItemUI.CheckEmptyItem())
                 return slot;
         }
         return null;
