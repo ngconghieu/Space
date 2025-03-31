@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEditor.Progress;
 
-public class InventoryUI : Singleton<InventoryUI>
+public class InventoryUI : GameMonoBehaviour
 {
     [SerializeField] private ItemSlot _itemSlotDefault;
     [SerializeField] private Transform _scrollView;
     [SerializeField] private Transform _holder;
     [SerializeField] private bool _showInventory = true;
-    private readonly Dictionary<int, ItemSlot> _itemSlotList = new();
+    private readonly List<ItemSlot> _itemSlotList = new();
 
     public Transform Holder => _holder;
 
@@ -25,6 +25,7 @@ public class InventoryUI : Singleton<InventoryUI>
         LoadHolder();
         LoadScrollView();
         LoadItemSlotDefault();
+        ServiceLocator.Register<InventoryUI>(this);
     }
 
     private void LoadHolder()
@@ -55,7 +56,7 @@ public class InventoryUI : Singleton<InventoryUI>
     {
         ToggleInventory();
         InputManager.Instance.HandleInventoryToggle += ToggleInventory;
-        _itemSlotList.Add(0, _itemSlotDefault);
+        _itemSlotList.Add(_itemSlotDefault);
         LoadItemSlots();
     }
 
@@ -68,7 +69,7 @@ public class InventoryUI : Singleton<InventoryUI>
             ItemSlot newBtnItem = Instantiate(_itemSlotDefault, _itemSlotDefault.transform.parent);
             newBtnItem.name = $"ItemSlot_{i}";
             newBtnItem.SetIndex(i);
-            _itemSlotList.Add(i, newBtnItem);
+            _itemSlotList.Add(newBtnItem);
         }
     }
     #endregion
@@ -90,23 +91,6 @@ public class InventoryUI : Singleton<InventoryUI>
         InventoryManager.Instance.RemoveEmptyItems();
     }
 
-    private void AddNewItems(List<Item> items)
-    {
-        foreach (var item in items)
-        {
-            if (FindItemSlotById(item.ItemID) != null) continue;
-            ItemSlot emptySlot = FindEmptyItemSlot();
-            Debug.Log(emptySlot + " - " + item.ItemID);
-            if (emptySlot == null) continue;
-
-            ItemUI itemUI = emptySlot.ItemUI;
-            itemUI.SetItemId(item.ItemID);
-            itemUI.SetImage(item.ItemProfiles.ItemIcon);
-            itemUI.SetAmount(item.Amount);
-            emptySlot.SetItemUI(itemUI);
-        }
-    }
-
     private void UpdateExistingItems(List<Item> items)
     {
         foreach (var item in items)
@@ -122,26 +106,36 @@ public class InventoryUI : Singleton<InventoryUI>
         }
     }
 
+    private void AddNewItems(List<Item> items)
+    {
+        foreach (var item in items)
+        {
+            if (FindItemSlotById(item.ItemID) != null) continue;
+            ItemSlot emptySlot = FindEmptyItemSlot();
+            if (emptySlot == null) continue;
+
+            ItemUI itemUI = emptySlot.ItemUI;
+            itemUI.SetItemId(item.ItemID);
+            itemUI.SetImage(item.ItemProfiles.ItemIcon);
+            itemUI.SetAmount(item.Amount);
+            emptySlot.SetItemUI(itemUI);
+        }
+    }
+
+
     private ItemSlot FindItemSlotById(string itemId)
     {
-        foreach (var slot in _itemSlotList.Values)
+        foreach (var slot in _itemSlotList)
         {
-            if (slot.ItemUI != null && slot.ItemUI.ItemId == itemId)
+            if (slot.ItemUI.ItemId == itemId)
                 return slot;
         }
         return null;
     }
 
-    private ItemSlot FindEmptyItemSlot()
-    {
-        foreach (var slot in _itemSlotList.Values)
-        {
-            if (slot.ItemUI.CheckEmptyItem())
-                return slot;
-        }
-        return null;
-    }
+    private ItemSlot FindEmptyItemSlot() =>
+        _itemSlotList.Find(slot => slot.ItemUI.CheckEmptyItem());
     #endregion
 
-    public Dictionary<int, ItemSlot> GetItemSlotList => _itemSlotList;
+    public List<ItemSlot> GetItemSlotList => _itemSlotList;
 }

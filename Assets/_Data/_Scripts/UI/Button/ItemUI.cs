@@ -7,6 +7,7 @@ public class ItemUI : GameMonoBehaviour
     [SerializeField] private string _itemId;
     [SerializeField] private Image _image;
     [SerializeField] private TextMeshProUGUI _amount;
+    [SerializeField] private RectTransform _rectTransform;
     public string ItemId => _itemId;
 
     #region LoadComponents
@@ -15,7 +16,16 @@ public class ItemUI : GameMonoBehaviour
         base.LoadComponents();
         LoadAmount();
         LoadImage();
+        LoadRectTransform();
         SetDefault();
+    }
+
+    private void LoadRectTransform()
+    {
+        if (_rectTransform != null) return;
+        _rectTransform = GetComponent<RectTransform>();
+        _rectTransform.anchoredPosition = Vector2.zero;
+        Debug.Log("LoadRectTransform", gameObject);
     }
 
     private void LoadImage()
@@ -58,6 +68,9 @@ public class ItemUI : GameMonoBehaviour
         SetImage(null);
         SetAmount(0);
     }
+
+    public void SetRectTransform(Vector2 position) =>
+        _rectTransform.anchoredPosition = position;
 
     public bool CheckEmptyItem() => _image.sprite == null;
 
