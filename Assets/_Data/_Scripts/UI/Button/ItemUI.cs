@@ -2,9 +2,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemUI : BtnAbstract
+public class ItemUI : GameMonoBehaviour
 {
-    [SerializeField] private int _index;
     [SerializeField] private string _itemId;
     [SerializeField] private Image _image;
     [SerializeField] private TextMeshProUGUI _amount;
@@ -21,7 +20,7 @@ public class ItemUI : BtnAbstract
     private void LoadImage()
     {
         if (_image != null) return;
-        _image = transform.Find("Image").GetComponent<Image>();
+        _image = GetComponentInChildren<Image>();
         Debug.Log("LoadImage", gameObject);
     }
 
@@ -36,9 +35,6 @@ public class ItemUI : BtnAbstract
     }
 
     #endregion
-
-    public void SetIndex(int index) =>
-        _index = index;
 
     public void SetAmount(int value)
     {
@@ -55,7 +51,7 @@ public class ItemUI : BtnAbstract
     public void SetItemId(string itemId) =>
         _itemId = itemId;
 
-    public void SetDefaultBtn()
+    public void SetDefault()
     {
         SetItemId(string.Empty);
         SetImage(null);
@@ -64,8 +60,4 @@ public class ItemUI : BtnAbstract
 
     public bool IsEmptyBtn() => !_image.enabled;
 
-    protected override void OnClick()
-    {
-        Debug.Log("btnItem clicked: " + _itemId);
-    }
 }

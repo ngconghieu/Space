@@ -1,13 +1,15 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
-public class InventoryUI : GameMonoBehaviour
+public class InventoryUI : Singleton<InventoryUI>
 {
-    [SerializeField] private ItemUI _btnDefault;
+    [SerializeField] private ItemSlot _itemSlotDefault;
     [SerializeField] private Transform _scrollView;
     [SerializeField] private Transform _holder;
     [SerializeField] private bool _showInventory = true;
-    [SerializeField] private List<ItemUI> _btnItemList = new();
+    private readonly Dictionary<int, ItemSlot> _itemSlotList = new();
 
     public Transform Holder => _holder;
 
@@ -16,21 +18,20 @@ public class InventoryUI : GameMonoBehaviour
         Initialize();
     }
 
-    private void Initialize()
-    {
-        _btnDefault.SetDefaultBtn();
-        ToggleInventory();
-        LoadItemSlots();
-        InputManager.Instance.HandleInventoryToggle += ToggleInventory;
-    }
-
     #region LoadComponents
     protected override void LoadComponents()
     {
         base.LoadComponents();
+        LoadHolder();
         LoadScrollView();
-        LoadBtnDefault();
-        _holder = _scrollView.Find("Holder");
+        LoadItemSlotDefault();
+    }
+
+    private void LoadHolder()
+    {
+        if (_holder != null) return;
+        _holder = transform.Find("Holder");
+        Debug.Log("LoadHolder", gameObject);
     }
 
     private void LoadScrollView()
@@ -40,24 +41,34 @@ public class InventoryUI : GameMonoBehaviour
         Debug.Log("LoadScrollView", gameObject);
     }
 
-    private void LoadBtnDefault()
+    private void LoadItemSlotDefault()
     {
-        if (_btnDefault != null) return;
-        _btnDefault = GetComponentInChildren<ItemUI>();
-        _btnItemList.Add(_btnDefault);
+        if (_itemSlotDefault != null) return;
+        _itemSlotDefault = GetComponentInChildren<ItemSlot>();
+        _itemSlotDefault.SetIndex(0);
         Debug.Log("LoadBtnDefault", gameObject);
+    }
+    #endregion
+
+    #region Initialize
+    private void Initialize()
+    {
+        ToggleInventory();
+        InputManager.Instance.HandleInventoryToggle += ToggleInventory;
+        _itemSlotList.Add(0, _itemSlotDefault);
+        LoadItemSlots();
     }
 
     private void LoadItemSlots()
     {
         int inventorySize = InventoryManager.Instance.InventorySize();
 
-        for (int i = _btnItemList.Count; i < inventorySize; i++)
+        for (int i = _itemSlotList.Count; i < inventorySize; i++)
         {
-            ItemUI newBtnItem = Instantiate(_btnDefault, _btnDefault.transform.parent);
-            newBtnItem.name = $"Item_{i}";
+            ItemSlot newBtnItem = Instantiate(_itemSlotDefault, _itemSlotDefault.transform.parent);
+            newBtnItem.name = $"ItemSlot_{i}";
             newBtnItem.SetIndex(i);
-            _btnItemList.Add(newBtnItem);
+            _itemSlotList.Add(i, newBtnItem);
         }
     }
     #endregion
@@ -70,30 +81,66 @@ public class InventoryUI : GameMonoBehaviour
         _scrollView.gameObject.SetActive(_showInventory);
     }
 
+    #region HandleItemChange
     public void HandleItemChange()
     {
         List<Item> items = InventoryManager.Instance.GetItemList();
-        foreach (var item in items)
-        {
-            // update existing btnItem
-            ItemUI btnItem = _btnItemList.Find(_item => _item.ItemId.Equals(item.ItemID));
-            if (btnItem != null)
-            {
-                if (item.Amount == 0)
-                    btnItem.SetDefaultBtn();
-                else
-                    btnItem.SetAmount(item.Amount);
-            }
-
-            // add new btnItem
-            else
-            {
-                btnItem = _btnItemList.Find(_item => _item.IsEmptyBtn());
-                btnItem.SetItemId(item.ItemID);
-                btnItem.SetImage(item.ItemProfiles.ItemIcon);
-                btnItem.SetAmount(item.Amount);
-            }
-        }
+        UpdateExistingItems(items);
+        AddNewItems(items);
         InventoryManager.Instance.RemoveEmptyItems();
     }
+
+    private void AddNewItems(List<Item> items)
+    {
+        foreach (var item in items)
+        {
+            if (FindItemSlotById(item.ItemID) != null) continue;
+            ItemSlot emptySlot = FindEmptyItemSlot();
+            if (emptySlot == null) continue;
+
+            ItemUI itemUI = emptySlot.ItemUI;
+            itemUI.SetItemId(item.ItemID);
+            itemUI.SetImage(item.ItemProfiles.ItemIcon);
+            itemUI.SetAmount(item.Amount);
+            emptySlot.SetItemUI(itemUI);
+        }
+    }
+
+    private void UpdateExistingItems(List<Item> items)
+    {
+        foreach (var item in items)
+        {
+            ItemSlot itemSlot = FindItemSlotById(item.ItemID);
+            if (itemSlot != null)
+            {
+                if (item.Amount == 0)
+                    itemSlot.ItemUI.SetDefault();
+                else
+                    itemSlot.ItemUI.SetAmount(item.Amount);
+            }
+        }
+    }
+
+    private ItemSlot FindItemSlotById(string itemId)
+    {
+        foreach (var slot in _itemSlotList.Values)
+        {
+            if (slot.ItemUI != null && slot.ItemUI.ItemId == itemId)
+                return slot;
+        }
+        return null;
+    }
+
+    private ItemSlot FindEmptyItemSlot()
+    {
+        foreach (var slot in _itemSlotList.Values)
+        {
+            if (slot.ItemUI.IsEmptyBtn())
+                return slot;
+        }
+        return null;
+    }
+    #endregion
+
+    public Dictionary<int, ItemSlot> GetItemSlotList => _itemSlotList;
 }
